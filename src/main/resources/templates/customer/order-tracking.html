@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - Hexashop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+<body>
+
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            <li><a th:href="@{/contact}">Contact Us</a></li>
+                            <li><a th:href="@{/login}">Login</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i> Cart (0)</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="section" id="order-tracking">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="tracking-title">Track Your Order</h2>
+                </div>
+            </div>
+
+            <div class="order-details-card">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="card-title">Order Details</h3>
+                    </div>
+                </div>
+
+                <div class="row content-grid">
+                    <div class="col-lg-3 col-md-6 info-col">
+                        <p class="date">July 10, 2022</p>
+                        <p class="order-no">Order No: 5142414241241</p>
+                        
+                        <div class="status-group">
+                            <p>Order Status: <span>New Order</span></p>
+                            <p>Packages in this Order: <span>1</span></p>
+                            <p>Total Items: <span>1</span></p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 info-col">
+                        <h5 class="sub-head">Ship to:</h5>
+                        <p class="address">Lahore Road, Sheikhupura</p>
+
+                        <h5 class="sub-head mt-4">Payment Information:</h5>
+                        <p class="payment-info">Credit Card No: 2522 2322 5455 2566</p>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 info-col">
+                        <h5 class="sub-head">Order Summary</h5>
+                        <ul class="summary-list">
+                            <li>Subtotal: <span>120$</span></li>
+                            <li>Shipping: <span>20$</span></li>
+                            <li>Sales Tax: <span>0$</span></li>
+                            <li class="total">Total <span>140$</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 action-col">
+                        <button class="btn-outline">Modify / Cancel Order</button>
+                        <button class="btn-solid">Discover More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="promo">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-6">
+                    <div class="left-images">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <img th:src="@{/assets/images/men-04.png}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <img th:src="@{/assets/images/men-06.png}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="right-content">
+                        <h2>Men's Collection</h2>
+                        <span>Explore Our Product</span>
+                        
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+                        
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+                        
+                        <div class="main-white-button">
+                            <a th:href="@{/men}">Discover More</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a th:href="@{/men}">Men’s Shopping</a></li>
+                        <li><a th:href="@{/women}">Women’s Shopping</a></li>
+                        <li><a th:href="@{/kids}">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

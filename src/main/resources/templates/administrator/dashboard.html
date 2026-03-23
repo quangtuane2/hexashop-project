@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hexashop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* CSS Riêng cho Admin */
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        /* Sidebar (Cột trái) */
+        .sidebar {
+            min-height: 100vh;
+            background-color: #2a2a2a; /* Màu đen Hexashop */
+            color: #fff;
+            padding-top: 20px;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: #f55; /* Màu đỏ Hexashop */
+            color: #fff;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Content (Cột phải) */
+        .main-content {
+            padding: 20px;
+        }
+        
+        /* Cards (Thống kê) */
+        .stats-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-icon {
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+        
+        /* Table */
+        .recent-orders {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebarMenu">
+                <a href="index.html" class="brand-logo">HEXA ADMIN</a>
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fa fa-home"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        	<a class="nav-link" th:href="@{/admin/category}">
+                        	<i class="fa fa-list me-2"></i> Categories</a>
+                    	</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-box"></i> Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-shopping-bag"></i> Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-users"></i> Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-cog"></i> Settings
+                            </a>
+                        </li>
+                        <li class="nav-item mt-5">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fa fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard Overview</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-calendar"></i> This Week
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stats-card border-left-primary h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Earnings (Monthly)</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar stats-icon text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stats-card border-left-success h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Annual Orders</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">215</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-dollar-sign stats-icon text-success"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stats-card border-left-info h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Visitors</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5,000</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user stats-icon text-info"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stats-card border-left-warning h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-comments stats-icon text-warning"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-orders">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Recent Orders</h4>
+                        <a href="#" class="btn btn-primary btn-sm">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#51421</td>
+                                    <td>Justin Bieber</td>
+                                    <td>Classic Spring Jacket</td>
+                                    <td>$120.00</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>#51422</td>
+                                    <td>Taylor Swift</td>
+                                    <td>Women's Dress</td>
+                                    <td>$80.00</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>#51423</td>
+                                    <td>Ed Sheeran</td>
+                                    <td>Kid's T-Shirt</td>
+                                    <td>$40.00</td>
+                                    <td><span class="badge bg-danger">Cancelled</span></td>
+                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>#51424</td>
+                                    <td>Ariana Grande</td>
+                                    <td>Luxury Bag</td>
+                                    <td>$200.00</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

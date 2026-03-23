@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Hexashop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+
+<body>
+
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            <li><a th:href="@{/about}">About Us</a></li>
+                            <li><a th:href="@{/contact}">Contact Us</a></li>
+                            <li><a th:href="@{/login}">Login</a></li>
+                            
+                            <li><a th:href="@{/register}" class="active">Register</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="login-page-wrap">
+        
+        <div class="big-text-bg top-text">
+            <h1>CLOTHES</h1>
+        </div>
+        <div class="big-text-bg bottom-text">
+            <h1>CLOTHES</h1>
+        </div>
+
+        <div class="container h-100">
+            <div class="row align-items-stretch h-100" style="position: relative; z-index: 2;">
+                
+                <div class="col-lg-6 col-md-12">
+                    <div class="login-form-wrap d-flex align-items-center justify-content-center h-100">
+                         <div class="login-form-card">
+                            <h2>Hello ! <br> Register Now</h2>
+                            
+                            <form th:action="@{/register}" method="post">
+                                <div class="input-group">
+                                    <input type="text" name="fullName" placeholder="Enter Full Name" required>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="email" name="email" placeholder="Enter Email" required>
+                                </div>
+                                
+                                <div class="input-group">
+                                    <input type="password" name="password" placeholder="Enter Password" required>
+                                    <i class="fa fa-eye-slash toggle-password"></i>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="password" name="confirmPassword" placeholder="Re-enter Password" required>
+                                    <i class="fa fa-eye-slash toggle-password"></i>
+                                </div>
+
+                                <div class="terms-check">
+                                    <input type="checkbox" id="terms" name="terms" required>
+                                    <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
+                                </div>
+
+                                <button type="submit" class="signin-btn">
+                                    REGISTER <i class="fa fa-arrow-right"></i>
+                                </button>
+                            </form>
+
+                            <p class="signup-link">Already have an account ? <a th:href="@{/login}">Login Now</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <div class="login-left">
+                        <div class="product-img">
+                            <img th:src="@{/assets/images/login-image.png}" alt="Clothes Model">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a th:href="@{/men}">Men’s Shopping</a></li>
+                        <li><a th:href="@{/women}">Women’s Shopping</a></li>
+                        <li><a th:href="@{/kids}">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

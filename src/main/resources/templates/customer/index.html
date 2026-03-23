@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexashop Ecommerce</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/slick.css}">
+</head>
+<body>
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+
+                        <ul class="nav">
+                            <li><a th:href="@{/}" class="active">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            <li><a th:href="@{/about}">About Us</a></li>
+                            <li><a th:href="@{/contact}">Contact Us</a></li>
+                            <li><a th:href="@{/login}">Login</a></li>
+                            <li><a th:href="@{/register}">Register</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}">
+                                    <i class="fa fa-shopping-cart"></i> Cart (0)
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-banner" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="left-content">
+                        <div class="thumb">
+                            <div class="inner-content">
+                                <h4>We Are Hexashop</h4>
+                                <span>Lorem Ipsum is simply dummy text of the printingand typesetting industry.e</span>
+                                <div class="main-border-button">
+                                    <a href="#">Purchase Now!</a>
+                                </div>
+                            </div>
+                            <img th:src="@{/assets/images/banner-left.jpg}" alt="We Are Hexashop">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="right-content">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <div class="inner-content">
+                                        <h4>Women</h4>
+                                        <span>Best Clothes For Women</span>
+                                    </div>
+                                    <div class="main-border-button js-hover-btn">
+                                        <a th:href="@{/women}">Discover More</a>
+                                    </div>
+                                    <img th:src="@{/assets/images/banner-right-1.png}" alt="Women">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <div class="inner-content">
+                                        <h4>Men</h4>
+                                        <span>Best Clothes For Men</span>
+                                    </div>
+                                    <div class="main-border-button js-hover-btn">
+                                        <a th:href="@{/men}">Discover More</a>
+                                    </div>
+                                    <img th:src="@{/assets/images/banner-right-2.png}" alt="Men">
+                                </div>
+                            </div>
+                            
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <div class="inner-content">
+                                        <h4>Kids</h4>
+                                        <span>Best Clothes For Kids</span>
+                                    </div>
+                                    <div class="main-border-button js-hover-btn">
+                                        <a th:href="@{/kids}">Discover More</a>
+                                    </div>
+                                    <img th:src="@{/assets/images/banner-right-3.png}" alt="Kids">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <div class="inner-content">
+                                        <h4>Accessories</h4>
+                                        <span>Best Trend Accessories</span>
+                                    </div>
+                                    <div class="main-border-button js-hover-btn">
+                                        <a href="#">Discover More</a>
+                                    </div>
+                                    <img th:src="@{/assets/images/banner-right-4.png}" alt="Accessories">
+                                </div>
+                            </div>
+                         </div> 
+                    </div> 
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <section class="section" id="men">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <h2>Men's Latest</h2>
+                            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                        </div>
+                        <div class="slick-button-next-prev" id="men-arrows"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row product-grid" id="men-slider">
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=1)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/men-01.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars">
+                            <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=2)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/men-02.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars">
+                            <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="item">
+                    <div class="thumb">
+                         <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=3)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/men-03.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                         <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="section" id="women">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <h2>Women's Latest</h2>
+                            <span>Lorem Ipsum is simply dummy text...</span>
+                        </div>
+                        <div class="slick-button-next-prev" id="women-arrows"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row product-grid" id="women-slider">
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=5)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/women-01.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="section" id="kids">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <h2>Kid's Latest</h2>
+                            <span>Lorem Ipsum is simply dummy text...</span>
+                        </div>
+                        <div class="slick-button-next-prev" id="kids-arrows"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row product-grid" id="kids-slider">
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=9)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-01.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                         <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section class="section" id="explore">
+        <div class="container">
+            <div class="row"> 
+                <div class="col-lg-6">
+                    <div class="left-content">
+                        <h2>Explore Our Products</h2>
+                        <span>Lorem Ipsum is simply dummy text...</span>
+                        <div class="quote">
+                            <i class="fa fa-quote-left"></i>
+                            <p>You can make a small contribution via PayPal if you find this template useful.</p>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet...</p>
+                        <p>Duis aute irure dolor in reprehenderit...</p>
+                        <div class="main-border-button">
+                            <a href="#">Discover More</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="right-content">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="leather">
+                                    <h4>Leather Bags</h4>
+                                    <span>Latest Collection</span>
+                                    <img th:src="@{/assets/images/explore-image-01.png}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="first-image">
+                                    <img th:src="@{/assets/images/explore-image-02.png}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="second-image">
+                                    <img th:src="@{/assets/images/explore-image-03.png}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="types">
+                                    <h4>Different Types</h4>
+                                    <span>Over 304 Products</span>
+                                    <img th:src="@{/assets/images/explore-image-04.png}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="social">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <h2>Social Media</h2>
+                            <span>Lorem Ipsum is simply dummy text...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row images">
+                <div class="col-2">
+                    <div class="thumb">
+                        <img th:src="@{/assets/images/social-media-01.png}" alt="">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="thumb">
+                        <img th:src="@{/assets/images/social-media-02.png}" alt="">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="thumb">
+                        <img th:src="@{/assets/images/social-media-03.png}" alt="">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="thumb">
+                        <img th:src="@{/assets/images/social-media-04.png}" alt="">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="thumb">
+                        <img th:src="@{/assets/images/social-media-05.png}" alt="">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="thumb">
+                        <img th:src="@{/assets/images/social-media-06.png}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a href="#">Men’s Shopping</a></li>
+                        <li><a href="#">Women’s Shopping</a></li>
+                        <li><a href="#">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/jquery-migrate-1.2.1.min.js}"></script>
+    <script th:src="@{/assets/js/slick.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

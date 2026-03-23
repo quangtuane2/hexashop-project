@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexashop - Kid's Clothing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/slick.css}">
+</head>
+<body>  
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            
+                            <li><a th:href="@{/kids}" class="active">Kid's</a></li>
+                            
+                            <li><a th:href="@{/about}">About Us</a></li>
+                            <li><a th:href="@{/contact}">Contact Us</a></li>
+                            <li><a th:href="@{/login}">Login</a></li>
+                            <li><a th:href="@{/register}">Register</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}">
+                                    <i class="fa fa-shopping-cart"></i> Cart (0)
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="section" id="flash-sales">
+        <div class="container">
+            <div class="flash-header">
+                <div class="header-title">
+                    <div class="sub-title">
+                        <span class="red-block"></span>
+                        <span>Today's</span>
+                    </div>
+                    <h2>Flash Sales</h2>
+                </div>
+                <div class="countdown-wrap">
+                    <div class="countdown-item"><span id="days">03</span><p>Days</p></div>
+                    <span class="separator">:</span>
+                    <div class="countdown-item"><span id="hours">23</span><p>Hours</p></div>
+                    <span class="separator">:</span>
+                    <div class="countdown-item"><span id="minutes">19</span><p>Minutes</p></div>
+                    <span class="separator">:</span>
+                    <div class="countdown-item"><span id="seconds">56</span><p>Seconds</p></div>
+                </div>
+                <div class="slick-button-next-prev" id="flash-arrows"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row product-grid" id="flash-slider">
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=9)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-01.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=10)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-02.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                 <div class="item">
+                    <div class="thumb">
+                         <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=11)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-03.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                         <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                 <div class="item">
+                    <div class="thumb">
+                         <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=12)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-04.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                         <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                 <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-01.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                 <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-06.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                 <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-07.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                 <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-08.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="kids_latest">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading" style="margin-bottom: 20px; margin-top: -80px;">
+                        <h2>Kid's Latest</h2>            
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a th:href="@{/single-product(id=9)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-01.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=10)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-02.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=11)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=12)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-04.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-13.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-08.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-07.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="promo">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="left-images">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <img th:src="@{/assets/images/men-04.png}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <img th:src="@{/assets/images/men-06.png}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="right-content">
+                        <h2>Men's Collection</h2>
+                        <span>Explore Our Product</span>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                        <div class="main-white-button">
+                            <a th:href="@{/men}">Discover More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="kids_featured">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading" style="margin-bottom: 20px; margin-top: -20px;">
+                        <h2>Featured</h2>            
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="item">
+                    <div class="thumb">
+                        <div class="hover-content">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-eye"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <img th:src="@{/assets/images/kids-11.png}" alt="">
+                    </div>
+                    <div class="down-content">
+                        <h4>Classic Spring</h4>
+                        <span>$120.00</span>
+                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    </div>
+                </div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-12.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-13.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-01.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-02.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-04.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-06.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="kids">
+        <div class="container">
+             <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading" style="margin-bottom: 20px; margin-top: -20px;">
+                        <h2>Casual</h2>            
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="container">
+            <div class="row">
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-06.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-07.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-08.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-11.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-12.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-13.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/kids-08.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="promo">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="left-images">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <img th:src="@{/assets/images/women-07.png}" alt="">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="thumb">
+                                    <img th:src="@{/assets/images/women-08.png}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="right-content">
+                        <h2>Women's Collection</h2>
+                        <span>Explore Our Product</span>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit.</p>
+                        <div class="main-white-button">
+                            <a th:href="@{/men}">Discover More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a th:href="@{/men}">Men’s Shopping</a></li>
+                        <li><a th:href="@{/women}">Women’s Shopping</a></li>
+                        <li><a th:href="@{/kids}">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/jquery-migrate-1.2.1.min.js}"></script>
+    <script th:src="@{/assets/js/slick.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

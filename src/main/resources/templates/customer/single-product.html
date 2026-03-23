@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Hexashop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+<body>
+
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            <li><a th:href="@{/login}">Login</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i> Cart (0)</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="section" id="product">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-8">
+                    <div class="left-images">
+                        <img id="product-img" th:src="@{/assets/images/men-01.png}" alt="Product Image">
+                        </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="right-content">
+                        <h4 id="product-name">Classic Spring</h4>
+                        
+                        <span class="price" id="product-price">$120.00</span>
+
+                        <ul class="stars">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        
+                        <span class="desc" id="product-desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod kon tempor incididunt ut labore.
+                        </span>
+
+                        <div class="quantity-content">
+                            <div class="left-content">
+                                <h6>No. of Orders</h6>
+                            </div>
+                            <div class="right-content">
+                                <div class="qty-btn-group">
+                                    <button class="minus">-</button>
+                                    <input type="text" value="1" readonly>
+                                    <button class="plus">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="total">
+                            <h4>Total: $120.00</h4> <div class="main-border-button">
+                                <a th:href="@{/cart}">Add To Cart</a>
+                            </div>
+                        </div>
+                        
+                        </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a th:href="@{/men}">Men’s Shopping</a></li>
+                        <li><a th:href="@{/women}">Women’s Shopping</a></li>
+                        <li><a th:href="@{/kids}">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

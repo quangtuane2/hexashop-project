@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập nhật Danh mục - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { min-height: 100vh; background-color: #2a2a2a; color: #fff; padding-top: 20px; }
+        .sidebar .nav-link { color: rgba(255,255,255,0.8); margin-bottom: 10px; padding: 10px 20px; border-radius: 5px; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background-color: #f55; color: #fff; }
+        .main-content { padding: 20px; }
+        .form-wrap { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <a th:href="@{/admin}" class="text-center mb-4 fs-4 fw-bold text-white text-decoration-none d-block">HEXA ADMIN</a>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin}"><i class="fa fa-home me-2"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/admin/category}"><i class="fa fa-list me-2"></i> Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-box me-2"></i> Products</a></li>
+                </ul>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                    <h1 class="h2">Cập nhật: <span th:text="${category.name}" class="text-primary"></span></h1>
+                    <a th:href="@{/admin/category}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</a>
+                </div>
+
+                <div class="form-wrap">
+                    <div th:if="${saveError}" class="alert alert-danger">
+                        Có lỗi xảy ra trong quá trình cập nhật dữ liệu!
+                    </div>
+
+                    <form th:action="@{/admin/category/edit/save(id=${category.id})}" method="post" th:object="${categoryDto}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên danh mục <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Danh mục cha</label>
+                            <select class="form-select" th:field="*{categoryId}" th:classappend="${#fields.hasErrors('categoryId')} ? 'is-invalid' : ''">
+                                <option value="0">-- Là danh mục gốc (Không có cha) --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" 
+                                        th:disabled="${cat.id == category.id}"> </option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mô tả chi tiết</label>
+                            <textarea class="form-control" rows="4" th:field="*{description}"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Trạng thái</label>
+                                <select class="form-select" th:field="*{status}">
+                                    <option value="true">Hoạt động (Hiển thị)</option>
+                                    <option value="false">Khóa (Ẩn)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Cập Nhật</button>
+                        </div>
+                    </form>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</body>
+</html>

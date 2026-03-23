@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Hexashop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+<body>
+
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            <li><a th:href="@{/about}">About Us</a></li>
+                            
+                            <li><a th:href="@{/contact}" class="active">Contact Us</a></li>
+                            
+                            <li><a th:href="@{/login}">Login</a></li>
+                            <li><a th:href="@{/register}">Register</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i> Cart (0)</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="contact-us">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-6">
+                    <div id="map">
+                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6472.462352674971!2d108.22624598999934!3d16.05891440118098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219cdb3006a2d%3A0x62ca993f60c3a12c!2zQuG6o28gdMOgbmcgxJBpw6p1IGto4bqvYyBDaMSDbSDEkMOgIE7hurVuZw!5e0!3m2!1svi!2s!4v1769786100519!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="section-heading">
+                        <h2>Say Hello. Don't Be Shy!</h2>
+                        <span>Details to details is what makes Hexashop different from the others.</span>
+                    </div>
+                    
+                    <form id="contact" th:action="@{/contact}" method="post">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <fieldset>
+                                    <input name="name" type="text" id="name" placeholder="Your name" required="">
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <fieldset>
+                                    <input name="email" type="text" id="email" placeholder="Your email" required="">
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <textarea name="message" rows="6" id="message" placeholder="Your message" required=""></textarea>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <button type="submit" id="form-submit" class="main-dark-button">
+                                        <i class="fa fa-paper-plane"></i> SEND MESSAGE
+                                    </button>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Shopping & Categories</h4>
+                    <ul>
+                        <li><a href="#">Men’s Shopping</a></li>
+                        <li><a href="#">Women’s Shopping</a></li>
+                        <li><a href="#">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Help & Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

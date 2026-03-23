@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Hexashop</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+<body>  
+    
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo">
+                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                        </a>
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            
+                            <li><a th:href="@{/about}" class="active">About Us</a></li>
+                            
+                            <li><a th:href="@{/contact}">Contact Us</a></li>
+                            <li><a th:href="@{/login}">Login</a></li>
+                            <li><a th:href="@{/register}">Register</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}">
+                                    <i class="fa fa-shopping-cart"></i> Cart (0)
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="page-heading about-page-heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-content">
+                        <h4>We are Hexashop</h4>
+                        <h2>Our Company Story</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="about-us-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="left-text">
+                        <h4>100 Years of Excellence</h4>
+                        <h1>Hexashop is the best place for fashion trends.</h1>
+                        <p>Hexashop is a modern and unique fashion E-commerce theme. Our goal is to provide high quality products and a seamless online shopping experience for our customers across the globe.</p>
+                        <div class="quote">
+                            <i class="fa fa-quote-left"></i>
+                            <p>Fashion is a language that creates itself in clothes to interpret reality.</p>
+                        </div>
+                        <div class="button-wrap">
+                            <a th:href="@{/contact}">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="right-image">
+                        <img th:src="@{/assets/images/people-walking-1.png}" alt="Company Office">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="team-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading">
+                        <h2>Our Team</h2>
+                        <span>Meet the dedicated people behind Hexashop.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img th:src="@{/assets/images/team-member-01.png}" alt="">
+                        </div>
+                        <div class="down-content">
+                            <h4>Ragnar Lodbrok</h4>
+                            <span>Product Caretaker</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img th:src="@{/assets/images/team-member-02.png}" alt="">
+                        </div>
+                        <div class="down-content">
+                            <h4>Floki Vilgerdarson</h4>
+                            <span>Chief Financial Analyst</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img th:src="@{/assets/images/team-member-03.png}" alt="">
+                        </div>
+                        <div class="down-content">
+                            <h4>Bjorn Ironside</h4>
+                            <span>Manager</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="team-member">
+                        <div class="member-image">
+                            <img th:src="@{/assets/images/team-member-04.png}" alt="">
+                        </div>
+                        <div class="down-content">
+                            <h4>Lagertha</h4>
+                            <span>Creative Director</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a href="#">Men’s Shopping</a></li>
+                        <li><a href="#">Women’s Shopping</a></li>
+                        <li><a href="#">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+                </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>
