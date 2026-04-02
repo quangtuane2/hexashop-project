@@ -84,8 +84,11 @@
                                     <span th:unless="${p.status}" class="badge bg-secondary">Ngừng bán</span>
                                 </td>
                                 <td>
-                                    <a th:href="@{/admin/product/edit(id=${p.id})}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
-                                    <a th:href="@{/admin/product/delete(id=${p.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Khóa sản phẩm này?');"><i class="fa fa-trash"></i></a>
+                                    <a th:href="@{/admin/product/edit(id=${p.id}, page=${currentPage})}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+			                     	<button type="button" class="btn btn-sm btn-danger" 
+									        th:onclick="deleteProductAjax(this, [[${p.id}]])">
+									    <i class="fa fa-trash"></i>
+									</button>
                                 </td>
                             </tr>
                             <tr th:if="${products.empty}">
@@ -112,5 +115,7 @@
             </main>
         </div>
     </div>
+    
+    <script th:src="@{/admin_assets/js/script.js}"></script>
 </body>
 </html>

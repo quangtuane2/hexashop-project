@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.example.hexashop_project.dto.ProductDto;
@@ -36,7 +37,20 @@ public class ProductService {
 //        Optional<Product> product = productRepository.findById(id);
 //        return product.orElse(null);
 //    }
+    
+    public Page<Product> getProductsByCategory(Integer categoryId, Pageable pageable) {
+        return productRepository.findActiveProductsByCategory(categoryId, pageable);
+    }
 
+    // Lấy danh sách Nổi Bật (Giới hạn số lượng)
+    public List<Product> getFeaturedProducts(Integer categoryId, int limit) {
+        return productRepository.findFeaturedProducts(categoryId, PageRequest.of(0, limit));
+    }
+
+    // Lấy danh sách Flash Sale (Giới hạn số lượng)
+    public List<Product> getFlashSaleProducts(Integer categoryId, int limit) {
+        return productRepository.findFlashSaleProducts(categoryId, PageRequest.of(0, limit));
+    }
     // Lưu hoặc cập nhật sản phẩm
     public Product saveOrUpdate(Product product) {
         return productRepository.save(product);

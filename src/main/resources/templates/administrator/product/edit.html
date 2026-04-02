@@ -32,14 +32,15 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
                     <h1 class="h2">Cập nhật: <span class="text-primary" th:text="${product.name}"></span></h1>
-                    <a th:href="@{/admin/product}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</a>
+                    <a th:href="@{/admin/product(page=${currentPage})}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</a>
                 </div>
 
                 <div class="form-wrap">
                     <div th:if="${saveError}" class="alert alert-danger">Có lỗi khi lưu dữ liệu!</div>
 
-                    <form th:action="@{/admin/product/edit/save(id=${product.id})}" method="post" th:object="${productDto}" enctype="multipart/form-data">
-                        
+                    <form id="formEditProduct" th:object="${productDto}" 
+						      th:onsubmit="|submitEditAjax(event, ${product.id}, ${currentPage ?: 0})|" 
+						      enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
@@ -107,12 +108,14 @@
 
                         <hr class="my-4">
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Cập Nhật</button>
-                        </div>
+					        <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Cập Nhật</button>
+					    </div>
                     </form>
                 </div>
             </main>
         </div>
     </div>
+    
+    <script th:src="@{/admin_assets/js/script.js}"></script>
 </body>
 </html>

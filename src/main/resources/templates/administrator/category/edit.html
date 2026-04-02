@@ -41,8 +41,8 @@
                         Có lỗi xảy ra trong quá trình cập nhật dữ liệu!
                     </div>
 
-                    <form th:action="@{/admin/category/edit/save(id=${category.id})}" method="post" th:object="${categoryDto}">
-                        
+                     <form id="formEditCategory" th:object="${categoryDto}" 
+      						th:onsubmit="|submitEditCategoryAjax(event, ${category.id}, ${currentPage ?: 0})|">   
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tên danh mục <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
@@ -84,5 +84,7 @@
             </main>
         </div>
     </div>
+    
+    <script th:src="@{/admin_assets/js/script.js}"></script>
 </body>
 </html>

@@ -68,72 +68,111 @@
         </div>
         <div class="container">
             <div class="row product-grid" id="flash-slider">
-                <div class="item">
-                    <div class="thumb">
-                        <div class="hover-content">
-                            <ul>
-                                <li><a th:href="@{/single-product(id=5)}"><i class="fa fa-eye"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
+                <div class="item" th:each="product : ${flashSales}">
+			        <div class="thumb">
+			            <div class="hover-content">
+			                <ul>
+			                    <li><a th:href="@{/single-product(id=${product.id})}"><i class="fa fa-eye"></i></a></li>
+			                    <li><a href="#"><i class="fa fa-star"></i></a></li>
+			                    <li><a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i></a></li>
+			                </ul>
+			            </div>
+			            <img th:if="${product.avatar != null}" th:src="@{${product.avatar}}" alt="Product Image">
+			            <img th:unless="${product.avatar != null}" th:src="@{/assets/images/women-01.png}" alt="Default Image">
+			        </div>
+			        
+			        <div class="down-content" style="padding-top: 15px;">
+                        <h4 class="product-title" th:text="${product.name}" style="font-size: 18px; margin-bottom: 5px; font-weight: bold;">Tên sản phẩm</h4>
+                        
+                        <div class="price-star-wrapper">
+	                        <div style="margin-top: 5px;"> 
+	                        	<span>
+			                       <del class="text-muted" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></del>
+			                          <span style="color: #ff5e00; font-weight: bold; font-size: 18px; margin-left: 10px;" 
+			                                th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')} + ' $'">
+			                          </span>
+	                        	</span>     
+	                        </div>
+	                        <ul class="stars" style="margin-top: 10px; color: #ff5e00;">
+	                            <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+	                        </ul>
                         </div>
-                        <img th:src="@{/assets/images/women-01.png}" alt="">
                     </div>
-                    <div class="down-content">
-                        <h4>Classic Spring</h4>
-                        <span>$120.00</span>
-                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
-                    </div>
-                </div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=6)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-02.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=7)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=8)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-04.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-05.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-06.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-07.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-08.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+			    </div>
             </div>
         </div>
     </section>
 
-    <section class="section" id="women_latest">
+	<section class="section" id="women_latest">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-heading" style="margin-bottom: 20px; margin-top: -80px;">
-                        <h2>Women's Latest</h2>            
+                <div class="col-12">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 30px; margin-bottom: 40px; margin-top: -40px;">
+                        <div class="section-heading" style="margin: 0; margin-left: -20px">
+                            <h2>Women's Latest</h2>            
+                        </div>
+                        
+                        <nav th:if="${productPage.totalPages > 1}" aria-label="Page navigation">
+                            <ul class="shop-pagination">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                    <a class="page-link" th:href="${currentPage == 0} ? '#' : @{/women(page=${currentPage - 1})}">Previous</a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}" th:classappend="${currentPage == i} ? 'active'">
+                                    <a class="page-link" th:href="@{/women(page=${i})}" th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage == productPage.totalPages - 1} ? 'disabled'">
+                                    <a class="page-link" th:href="${currentPage == productPage.totalPages - 1} ? '#' : @{/women(page=${currentPage + 1})}">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
+            
             <div class="row">
-                <div class="item">
+                <div class="col-lg-3 col-md-6 mb-5 item" th:each="product : ${womenProducts}">
                     <div class="thumb">
                         <div class="hover-content">
                             <ul>
-                                <li><a th:href="@{/single-product(id=5)}"><i class="fa fa-eye"></i></a></li>
+                                <li><a th:href="@{/single-product(id=${product.id})}"><i class="fa fa-eye"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                         </div>
-                        <img th:src="@{/assets/images/women-01.png}" alt="">
+                        <img th:if="${product.avatar != null}" th:src="@{${product.avatar}}" alt="Product Image" style="width: 100%; height: 300px; object-fit: cover; border-radius: 5px;">
+                        <img th:unless="${product.avatar != null}" th:src="@{/assets/images/women-01.png}" alt="Default Image" style="width: 100%; height: 300px; object-fit: cover; border-radius: 5px;">
                     </div>
-                    <div class="down-content">
-                        <h4>Classic Spring</h4>
-                        <span>$120.00</span>
-                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+                    
+                    <div class="down-content" style="padding-top: 15px;">
+                        <h4 class="product-title" th:text="${product.name}" style="font-size: 18px; margin-bottom: 5px; font-weight: bold;">Tên sản phẩm</h4>
+                        
+                        <div class="price-star-wrapper">
+	                        <div style="margin-top: 5px;">
+	                            <span th:if="${product.salePrice != null && product.salePrice > 0}">
+	                                <del class="text-muted" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></del>
+	                                <span style="color: #ff5e00; font-weight: bold; font-size: 18px; margin-left: 10px;" 
+	                                      th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')} + ' $'">
+	                                </span>
+	                            </span>
+	                            
+	                            <span th:unless="${product.salePrice != null && product.salePrice > 0}" 
+	                                  style="color: #7a7a7a; font-weight: bold; font-size: 16px;"
+	                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'">
+	                            </span>
+	                        </div>
+	                        
+	                        <ul class="stars" style="margin-top: 10px; color: #ff5e00;">
+	                            <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+	                        </ul>
+	                    </div>
                     </div>
                 </div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=6)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-02.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=7)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a th:href="@{/single-product(id=8)}"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-04.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-04.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-10.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-12.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-17.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+
+                <div class="col-12 text-center mt-5" th:if="${womenProducts.empty}">
+                    <h5 class="text-muted">Hiện tại chưa có sản phẩm nào trong danh mục này.</h5>
+                </div>
             </div>
-        </div>
+        </div> 
     </section>
 
     <section class="section" id="women_featured">
@@ -148,30 +187,41 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="item">
-                    <div class="thumb">
-                        <div class="hover-content">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-eye"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <img th:src="@{/assets/images/women-11.png}" alt="">
+            	<div class="item" th:each="product : ${featuredProducts}">
+			        <div class="thumb">
+			            <div class="hover-content">
+			                <ul>
+			                    <li><a th:href="@{/single-product(id=${product.id})}"><i class="fa fa-eye"></i></a></li>
+			                    <li><a href="#"><i class="fa fa-star"></i></a></li>
+			                    <li><a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i></a></li>
+			                </ul>
+			            </div>
+			            <img th:if="${product.avatar != null}" th:src="@{${product.avatar}}" alt="Product">
+			            <img th:unless="${product.avatar != null}" th:src="@{/assets/images/men-01.png}" alt="Default">
+			        </div>
+			        <div class="down-content" style="padding-top: 15px;">
+                        <h4 class="product-title" th:text="${product.name}" style="font-size: 18px; margin-bottom: 5px; font-weight: bold;">Tên sản phẩm</h4>
+                          	<div class="price-star-wrapper">
+		                        <div style="margin-top: 5px;"> 
+		                        	<span th:if="${product.salePrice != null && product.salePrice > 0}">
+				                       <del class="text-muted" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></del>
+				                          <span style="color: #ff5e00; font-weight: bold; font-size: 18px; margin-left: 10px;" 
+				                                th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')} + ' $'">
+				                          </span>
+		                        	</span> 
+		                        	
+		                        	<span th:unless="${product.salePrice != null && product.salePrice > 0}" 
+		                                  style="color: #7a7a7a; font-weight: bold; font-size: 16px;"
+		                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'">
+		                            </span> 
+		                               
+		                        </div>
+                        	</div>
+                        <ul class="stars" style="margin-top: 10px; color: #ff5e00;">
+                            <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+                        </ul>
                     </div>
-                    <div class="down-content">
-                        <h4>Classic Spring</h4>
-                        <span>$120.00</span>
-                        <ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
-                    </div>
-                </div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-12.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-13.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-14.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-05.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-06.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-07.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-10.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+			    </div> 
             </div>
         </div>
     </section>
@@ -223,14 +273,41 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-15.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-16.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-17.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-03.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-07.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-01.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-08.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
-                <div class="item"><div class="thumb"><div class="hover-content"><ul><li><a href="#"><i class="fa fa-eye"></i></a></li><li><a href="#"><i class="fa fa-star"></i></a></li><li><a href="#"><i class="fa fa-shopping-cart"></i></a></li></ul></div><img th:src="@{/assets/images/women-06.png}" alt=""></div><div class="down-content"><h4>Classic Spring</h4><span>$120.00</span><ul class="stars"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul></div></div>
+            	<div class="item" th:each="product : ${casualProducts}">
+			        <div class="thumb">
+			            <div class="hover-content">
+			                <ul>
+			                    <li><a th:href="@{/single-product(id=${product.id})}"><i class="fa fa-eye"></i></a></li>
+			                    <li><a href="#"><i class="fa fa-star"></i></a></li>
+			                    <li><a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i></a></li>
+			                </ul>
+			            </div>
+			            <img th:if="${product.avatar != null}" th:src="@{${product.avatar}}" alt="Product">
+			            <img th:unless="${product.avatar != null}" th:src="@{/assets/images/men-01.png}" alt="Default">
+			        </div>
+			        <div class="down-content" style="padding-top: 15px;">
+                        <h4 class="product-title" th:text="${product.name}" style="font-size: 18px; margin-bottom: 5px; font-weight: bold;">Tên sản phẩm</h4>
+                          	<div class="price-star-wrapper">
+		                        <div style="margin-top: 5px;"> 
+		                        	<span th:if="${product.salePrice != null && product.salePrice > 0}">
+				                       <del class="text-muted" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></del>
+				                          <span style="color: #ff5e00; font-weight: bold; font-size: 18px; margin-left: 10px;" 
+				                                th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')} + ' $'">
+				                          </span>
+		                        	</span> 
+		                        	
+		                        	<span th:unless="${product.salePrice != null && product.salePrice > 0}" 
+		                                  style="color: #7a7a7a; font-weight: bold; font-size: 16px;"
+		                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'">
+		                            </span> 
+		                               
+		                        </div>
+                        	</div>
+                        <ul class="stars" style="margin-top: 10px; color: #ff5e00;">
+                            <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+                        </ul>
+                    </div>
+			    </div> 
             </div>
         </div>
     </section>

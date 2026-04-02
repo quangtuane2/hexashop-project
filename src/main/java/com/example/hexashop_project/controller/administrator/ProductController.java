@@ -19,6 +19,14 @@ import com.example.hexashop_project.model.Product;
 import com.example.hexashop_project.service.CategoryService;
 import com.example.hexashop_project.service.ProductService;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.FieldError;
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/admin/product")
 public class ProductController {
@@ -105,7 +113,7 @@ public class ProductController {
 
     // GIAO DIỆN SỬA SẢN PHẨM
     @GetMapping("/edit")
-    public String editProduct(Model model, @RequestParam Integer id) {
+    public String editProduct(Model model, @RequestParam Integer id, @RequestParam(defaultValue = "0") int page) {
         Product product = productService.findById(id);
         if (product == null) {
             return "redirect:/admin/product";
@@ -130,50 +138,103 @@ public class ProductController {
         model.addAttribute("productDto", productDto);
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.findAll());
+        
+        model.addAttribute("currentPage", page);
 
         return "administrator/product/edit";
     }
 
     // XỬ LÝ CẬP NHẬT SẢN PHẨM
-    @PostMapping("/edit/save")
-    public String updateProduct(Model model, 
-            @Valid @ModelAttribute ProductDto productDto, 
-            @RequestParam Integer id, 
-            BindingResult result) {
+//    @PostMapping("/edit/save")
+//    public String updateProduct(Model model, 
+//            @Valid @ModelAttribute ProductDto productDto, 
+//            @RequestParam Integer id, 
+//            BindingResult result) {
+//        
+//        Product product = productService.findById(id);
+//        if (product == null) return "redirect:/admin/product";
+//
+//        // Kiểm tra trùng tên với sản phẩm khác
+//        if (!productDto.getName().equalsIgnoreCase(product.getName()) && productService.existByName(productDto.getName())) {
+//            result.rejectValue("name", null, "Tên sản phẩm đã tồn tại!");
+//        }
+//
+//        if (result.hasErrors()) {
+//            productDto.setAvatar(product.getAvatar()); // Giữ lại đường dẫn ảnh khi có lỗi form
+//            model.addAttribute("product", product);
+//            model.addAttribute("productDto", productDto);
+//            model.addAttribute("categories", categoryService.findAll());
+//            return "administrator/product/edit";
+//        }
+//
+//        try {
+//            productService.update(id, productDto);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            model.addAttribute("saveError", true);
+//            return "administrator/product/edit";
+//        }
+//
+//        return "redirect:/admin/product";
+//    }
+    
+    @PostMapping("/edit-ajax/{id}")
+    @ResponseBody
+    public ResponseEntity<?> updateProductAjax(@PathVariable Integer id, @Valid @ModelAttribute ProductDto productDto, BindingResult result) {
         
-        Product product = productService.findById(id);
-        if (product == null) return "redirect:/admin/product";
+        Map<String, String> errors = new HashMap<>();
 
-        // Kiểm tra trùng tên với sản phẩm khác
-        if (!productDto.getName().equalsIgnoreCase(product.getName()) && productService.existByName(productDto.getName())) {
-            result.rejectValue("name", null, "Tên sản phẩm đã tồn tại!");
-        }
-
+        // Kiểm tra lỗi Validation từ @Valid (Để trống, sai định dạng...)
         if (result.hasErrors()) {
-            productDto.setAvatar(product.getAvatar()); // Giữ lại đường dẫn ảnh khi có lỗi form
-            model.addAttribute("product", product);
-            model.addAttribute("productDto", productDto);
-            model.addAttribute("categories", categoryService.findAll());
-            return "administrator/product/edit";
+            for (FieldError error : result.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errors); 
         }
+    	
+    	try {
+            Product product = productService.findById(id);
+            if (product == null) {
+                return ResponseEntity.badRequest().body("Sản phẩm không tồn tại!");
+            }
 
-        try {
+            // Kiểm tra trùng tên với sản phẩm khác 
+            if (!productDto.getName().equalsIgnoreCase(product.getName()) && productService.existByName(productDto.getName())) {
+                return ResponseEntity.badRequest().body("Tên sản phẩm đã tồn tại!");
+            }
+
+            // Gọi Service để lưu cập nhật 
             productService.update(id, productDto);
+            
+            return ResponseEntity.ok("Cập nhật sản phẩm thành công!");
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("saveError", true);
-            return "administrator/product/edit";
+            return ResponseEntity.badRequest().body("Lỗi khi cập nhật dữ liệu: " + e.getMessage());
         }
-
-        return "redirect:/admin/product";
     }
 
     // XÓA MỀM SẢN PHẨM
-    @GetMapping("/delete")
-    public String deleteProduct(@RequestParam Integer id) {
-        if (id != null && id > 0) {
-            productService.inactive(id);
+//    @GetMapping("/delete")
+//    public String deleteProduct(@RequestParam Integer id) {
+//        if (id != null && id > 0) {
+//            productService.inactive(id);
+//        }
+//        return "redirect:/admin/product";
+//    }
+    
+    @DeleteMapping("/delete-ajax/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteProductAjax(@PathVariable Integer id) {
+        try {
+            if (id != null && id > 0) {
+            	productService.inactive(id); 
+                return ResponseEntity.ok("Xóa sản phẩm thành công!");
+            } else {
+                return ResponseEntity.badRequest().body("Không thể xóa sản phẩm này!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Lỗi hệ thống: " + e.getMessage());
         }
-        return "redirect:/admin/product";
     }
 }
