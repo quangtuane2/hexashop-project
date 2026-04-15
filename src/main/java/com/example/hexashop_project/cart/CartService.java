@@ -1,9 +1,6 @@
-package com.example.hexashop_project.service;
+package com.example.hexashop_project.cart;
 
 import org.springframework.stereotype.Service;
-
-import com.example.hexashop_project.model.Cart;
-import com.example.hexashop_project.model.CartItem;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -38,7 +35,7 @@ public class CartService {
             }
         }
 
-        // Nếu là đồ mới toanh, thì quăng thẳng vào giỏ
+        // Nếu là đồ mới , thì quăng thẳng vào giỏ
         if (!isExist) {
             cart.getItems().add(newItem);
         }

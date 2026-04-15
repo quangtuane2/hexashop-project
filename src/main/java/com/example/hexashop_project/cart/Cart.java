@@ -1,4 +1,4 @@
-package com.example.hexashop_project.model;
+package com.example.hexashop_project.cart;
 
 import java.util.ArrayList;
 import java.util.List;

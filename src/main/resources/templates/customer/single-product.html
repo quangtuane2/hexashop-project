@@ -61,7 +61,7 @@
 	        </div>
 	
 	        <div class="product-info-area">
-	            
+	            <input type="hidden" id="currentProductId" th:value="${product.id}">
 	            <h1 th:text="${product.name}">Tên Sản Phẩm</h1>
 	            
 	            <div class="product-prices">
@@ -336,7 +336,62 @@
 	            const availableSize = Array.from(sizeBoxes).find(b => !b.classList.contains('disabled'));
 	            if (availableSize) availableSize.click();
 	        }
-	    });
+	    });  
+
+        // HÀM XỬ LÝ KHI BẤM NÚT "THÊM VÀO GIỎ"
+        btnAddToCart.addEventListener('click', function(e) {
+            e.preventDefault(); // Ngăn chặn load trang
+
+            // Kiểm tra xem khách đã chọn đủ Màu và Size chưa
+            if (!selectedColor || !selectedSize) {
+                alert("Vui lòng chọn Màu sắc và Kích thước trước khi thêm vào giỏ!");
+                return;
+            }
+
+            // Gom dữ liệu
+            const productId = document.getElementById('currentProductId').value;
+            const quantity = document.getElementById('qtyInput').value;
+
+            // Đổi trạng thái nút thành "Đang xử lý" để chống click đúp
+            const originalText = btnAddToCart.innerText;
+            btnAddToCart.innerText = "Đang thêm...";
+            btnAddToCart.disabled = true;
+
+            // Gửi AJAX bằng Fetch API (Chuẩn hiện đại nhất)
+            fetch('/api/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: parseInt(productId),
+                    color: selectedColor,
+                    size: selectedSize,
+                    quantity: parseInt(quantity)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Trả lại trạng thái nút
+                btnAddToCart.innerText = originalText;
+                btnAddToCart.disabled = false;
+
+                if (data.status === "success") {
+                    alert("Thêm thành công! Giỏ hàng đang có " + data.totalQuantity + " món.");
+                    
+                    // Nếu bạn có icon Giỏ hàng trên Header, update số lượng ở đây
+                    // ví dụ: document.getElementById('cart-badge').innerText = data.totalQuantity;
+                } else {
+                    alert("Có lỗi xảy ra: " + data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btnAddToCart.innerText = originalText;
+                btnAddToCart.disabled = false;
+                alert("Lỗi kết nối đến máy chủ!");
+            });
+        });
 	</script>
     <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
     <script th:src="@{/assets/js/script.js}"></script>

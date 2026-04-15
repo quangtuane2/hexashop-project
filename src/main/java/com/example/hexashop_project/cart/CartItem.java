@@ -1,4 +1,4 @@
-package com.example.hexashop_project.model;
+package com.example.hexashop_project.cart;
 
 public class CartItem {
 	

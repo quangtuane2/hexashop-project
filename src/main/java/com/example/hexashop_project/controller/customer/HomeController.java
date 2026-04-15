@@ -194,10 +194,10 @@ public class HomeController {
         return "customer/single-product"; 
     }
     
-    @GetMapping("/cart")
-    public String cart() {
-        return "customer/cart"; 
-    }
+//    @GetMapping("/cart")
+//    public String cart() {
+//        return "customer/cart"; 
+//    }
 
     @GetMapping("/about")
     public String about() {
