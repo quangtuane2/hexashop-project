@@ -16,30 +16,9 @@ navLinks.forEach(link => {
         this.classList.add("active");
     });
 });
+ 
 
-//  XỬ LÝ NÚT TĂNG GIẢM SỐ LƯỢNG 
-const plusBtns = document.querySelectorAll('.plus');
-const minusBtns = document.querySelectorAll('.minus');
-
-plusBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-        let input = this.previousElementSibling; // Lấy thẻ input ngay trước nút +
-        let value = parseInt(input.value);
-        input.value = value + 1;
-    });
-});
-
-minusBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-        let input = this.nextElementSibling; // Lấy thẻ input ngay sau nút -
-        let value = parseInt(input.value);
-        if (value > 1) { // Không cho giảm dưới 1
-            input.value = value - 1;
-        }
-    });
-});
-
-/* SLIDER CONFIGURATION  */
+/*SLIDER CONFIGURATION  */
 
 function initProductSlider(sliderId, arrowId) {
     // Kiểm tra xem element có tồn tại không trước khi chạy slick để tránh lỗi
@@ -258,31 +237,118 @@ document.addEventListener("DOMContentLoaded", function() {
     handleSelection('.color-box');
     handleSelection('.size-box');
     
-    /* 3. XỬ LÝ SỐ LƯỢNG (Qty Selector) */
-    const qtyMinus = document.getElementById('qtyMinus');
-    const qtyPlus = document.getElementById('qtyPlus');
-    const qtyInput = document.getElementById('qtyInput');
-    
-    if(qtyMinus && qtyPlus && qtyInput) {
-        qtyMinus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
-            if (val > 1) qtyInput.value = val - 1;
-        });
-        qtyPlus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
-            qtyInput.value = val + 1;
-        });
-    }
 });
 
 function switchTab(element, tabId) {
-    // 1. Gỡ viền đen của tất cả các chữ Tab
+    // Gỡ viền đen của tất cả các chữ Tab
     document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
     // Thêm viền đen vào Tab vừa bấm
     element.classList.add('active');
 
-    // 2. Giấu tất cả các nội dung đi
+    // Giấu tất cả các nội dung đi
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     // Chỉ hiện nội dung của Tab vừa bấm
     document.getElementById(tabId).classList.add('active');
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    // XỬ LÝ NÚT TĂNG/GIẢM SỐ LƯỢNG
+    const updateBtns = document.querySelectorAll('.btn-update-qty');
+    updateBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const isPlus = this.classList.contains('plus');
+            const inputEl = this.parentElement.querySelector('.qty-input');
+            const maxStock = parseInt(inputEl.getAttribute('data-max'));
+            let currentQty = parseInt(inputEl.value);
+
+            let newQty = currentQty;
+
+            if (isPlus) {
+                if (currentQty >= maxStock) {
+                    alert("Bạn đã đặt tối đa sản phẩm có sẵn trong kho!");
+                    return; // Chặn không cho tăng nữa
+                }
+                newQty++;
+            } else {
+                if (currentQty <= 1) return; // Không cho giảm dưới 1
+                newQty--;
+            }
+
+            // Cập nhật giao diện input trước cho mượt
+            inputEl.value = newQty;
+
+            // Gửi AJAX lên Server
+            const productId = this.getAttribute('data-id');
+            const color = this.getAttribute('data-color');
+            const size = this.getAttribute('data-size');
+
+            fetch('/api/cart/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    productId: parseInt(productId),
+                    color: color,
+                    size: size,
+                    quantity: newQty
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    // Update lại tổng tiền (Format kiểu VNĐ)
+                    const formattedTotal = new Intl.NumberFormat('vi-VN').format(data.cartTotal) + ' đ';
+                    document.getElementById('cart-total-price').innerText = formattedTotal;
+                    
+                    // Cập nhật số phụ trên sub-total nếu có
+                    document.querySelectorAll('.order-details li:first-child span')[0].innerText = formattedTotal;
+                }
+            });
+        });
+    });
+
+    // XỬ LÝ NÚT XÓA SẢN PHẨM
+    const removeBtns = document.querySelectorAll('.remove-item');
+    removeBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?")) return;
+
+            const productId = this.getAttribute('data-id');
+            const color = this.getAttribute('data-color');
+            const size = this.getAttribute('data-size');
+            const trElement = this.closest('tr'); // Lấy cái hàng <tr> chứa nút này
+
+            fetch('/api/cart/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    productId: parseInt(productId),
+                    color: color,
+                    size: size,
+                    quantity: 0
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    // Xóa hàng <tr> khỏi màn hình bằng hiệu ứng
+                    trElement.style.transition = "all 0.3s";
+                    trElement.style.opacity = "0";
+                    setTimeout(() => {
+                        trElement.remove();
+                        // Nếu xóa hết giỏ hàng thì reload trang để hiện thông báo "Giỏ rỗng"
+                        if(data.cartQuantity === 0) location.reload();
+                    }, 300);
+
+                    // Update lại tổng tiền
+                    const formattedTotal = new Intl.NumberFormat('vi-VN').format(data.cartTotal) + ' đ';
+                    document.getElementById('cart-total-price').innerText = formattedTotal;
+                    document.querySelectorAll('.order-details li:first-child span')[0].innerText = formattedTotal;
+                }
+            });
+        });
+    });
+
+});

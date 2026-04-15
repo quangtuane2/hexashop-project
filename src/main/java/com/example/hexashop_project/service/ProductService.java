@@ -1,7 +1,6 @@
 package com.example.hexashop_project.service;
 
 import java.util.List;
-import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,10 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-    
+
     @Autowired
     private CategoryRepository categoryRepository;
-    
+
     @Autowired
     private FileUploadService fileUploadService;
 
@@ -40,11 +39,11 @@ public class ProductService {
     }
 
     // Tìm sản phẩm theo ID
-//    public Product getById(Integer id) {
-//        Optional<Product> product = productRepository.findById(id);
-//        return product.orElse(null);
-//    }
-    
+    // public Product getById(Integer id) {
+    // Optional<Product> product = productRepository.findById(id);
+    // return product.orElse(null);
+    // }
+
     public Page<Product> getProductsByCategory(Integer categoryId, Pageable pageable) {
         return productRepository.findActiveProductsByCategory(categoryId, pageable);
     }
@@ -58,6 +57,7 @@ public class ProductService {
     public List<Product> getFlashSaleProducts(Integer categoryId, int limit) {
         return productRepository.findFlashSaleProducts(categoryId, PageRequest.of(0, limit));
     }
+
     // Lưu hoặc cập nhật sản phẩm
     public Product saveOrUpdate(Product product) {
         return productRepository.save(product);
@@ -67,7 +67,7 @@ public class ProductService {
     public void deleteById(Integer id) {
         productRepository.deleteById(id);
     }
-    
+
     public Product findById(Integer id) {
         return productRepository.findById(id).orElse(null);
     }
@@ -89,12 +89,12 @@ public class ProductService {
             productRepository.save(product);
         }
     }
-    
+
     @Transactional
     public void saveProduct(ProductDto dto) throws Exception {
         Product product;
         boolean isUpdate = (dto.getId() != null); // Biến kiểm tra xem là Thêm mới hay Sửa
-        
+
         if (isUpdate) {
             // NẾU LÀ CẬP NHẬT
             product = productRepository.findById(dto.getId()).orElseThrow(() -> new Exception("Product not found"));
@@ -120,24 +120,24 @@ public class ProductService {
             Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
             product.setCategory(category);
         }
-        
+
         // XỬ LÝ UPLOAD ẢNH ĐẠI DIỆN (AVATAR)
         if (dto.getAvatarFile() != null && !dto.getAvatarFile().isEmpty()) {
             String avatarPath = fileUploadService.uploadFile(dto.getAvatarFile());
-            product.setAvatar(avatarPath); 
+            product.setAvatar(avatarPath);
         }
-        
+
         // MAP BIẾN THỂ (VARIANTS)
         if (dto.getVariants() != null && !dto.getVariants().isEmpty()) {
             for (ProductVariantDto vDto : dto.getVariants()) {
-                if (vDto.getColor() != null && !vDto.getColor().trim().isEmpty()) { 
+                if (vDto.getColor() != null && !vDto.getColor().trim().isEmpty()) {
                     ProductVariant variant = new ProductVariant();
                     variant.setColor(vDto.getColor());
                     variant.setSize(vDto.getSize());
                     variant.setStockQuantity(vDto.getStockQuantity());
-                    
-                    variant.setProduct(product); 
-                    product.getVariants().add(variant); 
+
+                    variant.setProduct(product);
+                    product.getVariants().add(variant);
                 }
             }
         }
@@ -146,20 +146,20 @@ public class ProductService {
         if (dto.getImageFiles() != null && !dto.getImageFiles().isEmpty()) {
             for (int i = 0; i < dto.getImageFiles().size(); i++) {
                 MultipartFile file = dto.getImageFiles().get(i);
-                
+
                 if (!file.isEmpty()) {
                     // Sửa lại gọi đúng hàm của fileUploadService
-                    String filePath = fileUploadService.uploadFile(file); 
-                    
+                    String filePath = fileUploadService.uploadFile(file);
+
                     ProductImage image = new ProductImage();
                     image.setPath(filePath);
-                    
+
                     if (dto.getProductImages() != null && dto.getProductImages().size() > i) {
                         image.setTitle(dto.getProductImages().get(i).getTitle());
                     }
-                    
+
                     image.setProduct(product);
-                    product.getProductImages().add(image); 
+                    product.getProductImages().add(image);
                 }
             }
         }
@@ -167,5 +167,5 @@ public class ProductService {
         // LƯU VÀO DATABASE
         productRepository.save(product);
     }
-  
+
 }

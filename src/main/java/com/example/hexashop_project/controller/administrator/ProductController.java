@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.validation.FieldError;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class ProductController {
     private CategoryService categoryService;
 
     // HIỂN THỊ DANH SÁCH (Có tìm kiếm và phân trang)
-    @GetMapping({"", "/"})
+    @GetMapping({ "", "/" })
     public String home(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
@@ -63,7 +62,7 @@ public class ProductController {
         model.addAttribute("direction", direction);
         model.addAttribute("name", name);
         model.addAttribute("categoryId", categoryId);
-        
+
         // Truyền danh sách Category ra View để làm bộ lọc tìm kiếm
         model.addAttribute("categories", categoryService.findAll());
 
@@ -75,19 +74,19 @@ public class ProductController {
     public String add(Model model) {
         ProductDto productDto = new ProductDto();
         model.addAttribute("productDto", productDto);
-        
+
         // Truyền danh sách Category ra View để chọn khi thêm SP
         model.addAttribute("categories", categoryService.findAll());
-        
+
         return "administrator/product/add";
     }
 
     // XỬ LÝ LƯU SẢN PHẨM MỚI
     @PostMapping("/add/save")
-    public String saveNewProduct(Model model, 
-            @Valid @ModelAttribute ProductDto productDto, 
+    public String saveNewProduct(Model model,
+            @Valid @ModelAttribute ProductDto productDto,
             BindingResult result) {
-        
+
         // Kiểm tra trùng tên
         if (productService.existByName(productDto.getName())) {
             result.rejectValue("name", null, "Tên sản phẩm đã tồn tại, vui lòng chọn tên khác!");
@@ -109,7 +108,6 @@ public class ProductController {
             model.addAttribute("categories", categoryService.findAll());
             return "administrator/product/add";
         }
-        
 
         return "redirect:/admin/product";
     }
@@ -123,7 +121,7 @@ public class ProductController {
         }
 
         ProductDto productDto = new ProductDto(product);
-        
+
         // Chuyền đường dẫn ảnh hiện tại ra View để hiển thị
         productDto.setAvatar(product.getAvatar());
 
@@ -134,16 +132,17 @@ public class ProductController {
         model.addAttribute("productDto", productDto);
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.findAll());
-        
+
         model.addAttribute("currentPage", page);
 
         return "administrator/product/edit";
     }
-    
+
     @PostMapping("/edit-ajax/{id}")
     @ResponseBody
-    public ResponseEntity<?> updateProductAjax(@PathVariable Integer id, @Valid @ModelAttribute ProductDto productDto, BindingResult result) {
-    	productDto.setId(id);
+    public ResponseEntity<?> updateProductAjax(@PathVariable Integer id, @Valid @ModelAttribute ProductDto productDto,
+            BindingResult result) {
+        productDto.setId(id);
         Map<String, String> errors = new HashMap<>();
 
         // Kiểm tra lỗi Validation từ @Valid (Để trống, sai định dạng...)
@@ -151,36 +150,37 @@ public class ProductController {
             for (FieldError error : result.getFieldErrors()) {
                 errors.put(error.getField(), error.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body(errors); 
+            return ResponseEntity.badRequest().body(errors);
         }
-    	
-    	try {
+
+        try {
             Product product = productService.findById(id);
             if (product == null) {
                 return ResponseEntity.badRequest().body("Sản phẩm không tồn tại!");
             }
 
-            // Kiểm tra trùng tên với sản phẩm khác 
-            if (!productDto.getName().equalsIgnoreCase(product.getName()) && productService.existByName(productDto.getName())) {
+            // Kiểm tra trùng tên với sản phẩm khác
+            if (!productDto.getName().equalsIgnoreCase(product.getName())
+                    && productService.existByName(productDto.getName())) {
                 return ResponseEntity.badRequest().body("Tên sản phẩm đã tồn tại!");
             }
 
-            // Gọi Service để lưu cập nhật 
+            // Gọi Service để lưu cập nhật
             productService.saveProduct(productDto);
-            
+
             return ResponseEntity.ok("Cập nhật sản phẩm thành công!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Lỗi khi cập nhật dữ liệu: " + e.getMessage());
         }
     }
-    
+
     @DeleteMapping("/delete-ajax/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteProductAjax(@PathVariable Integer id) {
         try {
             if (id != null && id > 0) {
-            	productService.inactive(id); 
+                productService.inactive(id);
                 return ResponseEntity.ok("Xóa sản phẩm thành công!");
             } else {
                 return ResponseEntity.badRequest().body("Không thể xóa sản phẩm này!");

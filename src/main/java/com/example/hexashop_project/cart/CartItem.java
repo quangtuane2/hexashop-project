@@ -11,7 +11,11 @@ public class CartItem {
     private String size;
     
     private int quantity;
+    private int maxStock;
 
+    public int getMaxStock() { return maxStock; }
+    public void setMaxStock(int maxStock) { this.maxStock = maxStock; }
+    
     public Integer getProductId() {
 		return productId;
 	}

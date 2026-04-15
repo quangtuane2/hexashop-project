@@ -9,7 +9,48 @@
     
     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
 </head>
-
+<style>
+	/* ep bang gio hang */
+	.cart-table-wrap table {
+	    width: 100%;
+	    border-collapse: collapse;
+	}
+	
+	/* Ngăn không cho Tên Sản Phẩm rớt xuống 2 dòng gây xấu */
+	.product-item h5 {
+	    display: -webkit-box;
+	    -webkit-line-clamp: 2; /* toi da 2 dong */
+	    -webkit-box-orient: vertical;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    font-size: 16px;
+	    margin-left: 15px; /* Tạo khoảng cách giữa Ảnh và Tên */
+	}
+	
+	.product-item {
+	    display: flex;
+	    align-items: center; /* Căn giữa ảnh và chữ theo chiều dọc */
+	}
+	
+	/* Căn giữa cột số lượng và thùng rác */
+	.cart-table-wrap td.qty,
+	.cart-table-wrap td:last-child {
+	    text-align: center;
+	}
+	
+	/* Style lại cái thùng rác cho giống các trang lớn */
+	.remove-item {
+	    display: inline-block;
+	    padding: 8px 12px;
+	    background-color: #fff1e1; /* Nền cam nhạt */
+	    border-radius: 5px;
+	    transition: all 0.2s;
+	}
+	.remove-item:hover {
+	    background-color: #d11218;
+	    color: white !important;
+	}
+</style>
 <body>
 
     <header class="header-area">
@@ -53,59 +94,53 @@
                     <div class="cart-table-wrap">
                         <table>
                             <thead>
-                                <tr>
-                                    <th class="product-thumb">Name</th> <th>Amount</th>
-                                    <th>Quantity</th>
-                                    <th>Colour</th>
-                                    <th></th> </tr>
+                               <tr>
+                                  <th style="width: 40%;">Name</th> 
+                                  <th style="width: 15%;">Amount</th>
+                                  <th style="width: 15%; text-align: center;">Quantity</th>
+                                  <th style="width: 20%;">classify</th>
+                                  <th style="width: 10%; text-align: center;">Edit</th> 
+                               </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="product-item">
-                                        <img th:src="@{/assets/images/cart-01.png}" alt="Product">
-                                        <h5>Classic Spring</h5>
+                                <tr th:if="${cart.items.empty}">
+                                    <td colspan="5" style="text-align: center; padding: 40px 0;">
+                                        <p style="font-size: 18px; color: #777;">Giỏ hàng của bạn đang trống.</p>
+                                        <br>
+                                        <a th:href="@{/}" class="btn btn-outline-dark mt-3" style="border: 1px solid #333; padding: 10px 20px; color: #333;">TIẾP TỤC MUA SẮM</a>
                                     </td>
-                                    <td class="price">$120.00</td>
-                                    <td class="qty">
-                                        <div class="qty-btn-group">
-                                            <button class="minus">-</button>
-                                            <input type="text" value="1" readonly>
-                                            <button class="plus">+</button>
-                                        </div>
-                                    </td>
-                                    <td class="color">White</td>
                                 </tr>
 
-                                <tr>
+                                <tr th:each="item : ${cart.items}">
                                     <td class="product-item">
-                                        <img th:src="@{/assets/images/cart-02.png}" alt="Product">
-                                        <h5>Classic Spring</h5>
+                                        <img th:if="${item.productAvatar != null}" th:src="@{${item.productAvatar}}" alt="Product">
+                                        <img th:unless="${item.productAvatar != null}" th:src="@{/assets/images/default-product.jpg}" alt="Product">
+                                        <h5 th:text="${item.productName}">Tên sản phẩm</h5>
                                     </td>
-                                    <td class="price">$120.00</td>
+                                    
+                                    <td class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                                    
                                     <td class="qty">
                                         <div class="qty-btn-group">
-                                            <button class="minus">-</button>
-                                            <input type="text" value="1" readonly>
-                                            <button class="plus">+</button>
+                                            <button class="minus btn-update-qty" 
+                                                    th:data-id="${item.productId}" th:data-color="${item.color}" th:data-size="${item.size}">-</button>
+                                            
+                                            <input type="text" class="qty-input" th:value="${item.quantity}" th:data-max="${item.maxStock}" readonly>
+                                            
+                                            <button class="plus btn-update-qty" 
+                                                    th:data-id="${item.productId}" th:data-color="${item.color}" th:data-size="${item.size}">+</button>
                                         </div>
                                     </td>
-                                    <td class="color">Red</td>
-                                </tr>
-                                
-                                <tr>
-                                    <td class="product-item">
-                                        <img th:src="@{/assets/images/cart-01.png}" alt="Product">
-                                        <h5>Classic Spring</h5>
+    
+                                    <td class="color">
+                                        <span th:text="${item.color}"></span> / <span th:text="${item.size}"></span>
                                     </td>
-                                    <td class="price">$120.00</td>
-                                    <td class="qty">
-                                        <div class="qty-btn-group">
-                                            <button class="minus">-</button>
-                                            <input type="text" value="1" readonly>
-                                            <button class="plus">+</button>
-                                        </div>
+                                    
+                                    <td>
+                                        <a href="#" class="remove-item" 
+                                           th:data-id="${item.productId}" th:data-color="${item.color}" th:data-size="${item.size}"
+                                           style="color: #d11218; font-size: 18px;" title="Xóa khỏi giỏ"><i class="fa fa-trash"></i></a>
                                     </td>
-                                    <td class="color">White</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -119,11 +154,11 @@
                         <div class="promo-code">
                             <input type="text" placeholder="Have a promo code">
                         </div>
-
+                        
                         <ul class="order-details">
-                            <li>Payable Amount <span>$120.00</span></li>
-                            <li>Shipping <span>$10.00</span></li>
-                            <li class="total">Order Total <span>$130.00</span></li>
+                            <li>Payable Amount <span th:text="${#numbers.formatDecimal(cart.getTotalPrice(), 0, 'COMMA', 0, 'POINT')} + ' $'">$0.00</span></li>
+                            <li>Shipping <span>0 $</span></li> 
+                            <li class="total"> Order Total <span id="cart-total-price" th:text="${#numbers.formatDecimal(cart.getTotalPrice(), 0, 'COMMA', 0, 'POINT')} + ' $'">$0.00</span></li>
                         </ul>
 
                         <div class="checkout-btn">

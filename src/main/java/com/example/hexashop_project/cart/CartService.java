@@ -41,5 +41,24 @@ public class CartService {
         }
     }
     
-    // (Sau này ta sẽ thêm các hàm removeItem, updateQuantity ở đây)
+    // Cập nhật số lượng
+    public void updateQuantity(HttpSession session, Integer productId, String color, String size, int newQuantity) {
+        Cart cart = getCart(session);
+        for (CartItem item : cart.getItems()) {
+            if (item.getProductId().equals(productId) && item.getColor().equals(color) && item.getSize().equals(size)) {
+                item.setQuantity(newQuantity);
+                break;
+            }
+        }
+    }
+
+    // Xóa món hàng
+    public void removeItem(HttpSession session, Integer productId, String color, String size) {
+        Cart cart = getCart(session);
+        cart.getItems().removeIf(item -> 
+            item.getProductId().equals(productId) && 
+            item.getColor().equals(color) && 
+            item.getSize().equals(size)
+        );
+    }
 }
