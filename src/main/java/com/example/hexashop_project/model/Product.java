@@ -1,7 +1,9 @@
 package com.example.hexashop_project.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import jakarta.persistence.*;
 
@@ -37,10 +39,16 @@ public class Product extends BaseModel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    // Khóa ngoại: 1 Sản phẩm có Nhiều Ảnh phụ 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+    
+    // Ở Entity Product.java
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> productImages = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductVariant> variants = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductReview> reviews = new ArrayList<>();
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -71,4 +79,16 @@ public class Product extends BaseModel {
 
     public Set<ProductImage> getProductImages() { return productImages; }
     public void setProductImages(Set<ProductImage> productImages) { this.productImages = productImages; }
+	public List<ProductVariant> getVariants() {
+		return variants;
+	}
+	public void setVariants(List<ProductVariant> variants) {
+		this.variants = variants;
+	}
+	public List<ProductReview> getReviews() {
+		return reviews;
+	}
+	public void setReviews(List<ProductReview> reviews) {
+		this.reviews = reviews;
+	}
 }

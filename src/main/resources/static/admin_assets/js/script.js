@@ -273,3 +273,57 @@ function submitEditCategoryAjax(event, categoryId, returnPage) {
         submitBtn.disabled = false;
     });
 }
+
+// XỬ LÝ ẢNH PHỤ 
+let imageIndex = document.querySelectorAll('.image-row:not(#image-template)').length;
+
+function addMoreImageRow() {
+    // Copy dòng template
+    let template = document.getElementById('image-template');
+    let clone = template.cloneNode(true);
+    
+    // Hiện nó lên và đổi ID
+    clone.classList.remove('d-none');
+    clone.removeAttribute('id');
+    
+    // Đánh số Index cho thuộc tính 'name' để Spring Boot nhận List
+    clone.querySelector('.title-input').name = `productImages[${imageIndex}].title`;
+    clone.querySelector('.file-input').name = `imageFiles[${imageIndex}]`; // Gửi file riêng
+    
+    // Nhét vào Container
+    document.getElementById('image-container').appendChild(clone);
+    imageIndex++;
+}
+
+// JS XỬ LÝ BIẾN THỂ 
+let variantIndex = document.querySelectorAll('.variant-row:not(#variant-template)').length;
+
+function addMoreVariantRow() {
+    let template = document.getElementById('variant-template');
+    let clone = template.cloneNode(true);
+    
+    clone.classList.remove('d-none');
+    clone.removeAttribute('id');
+    
+    // Yêu cầu bắt buộc nhập khi dòng này hiện ra
+    clone.querySelector('.color-input').required = true;
+    clone.querySelector('.size-input').required = true;
+    clone.querySelector('.stock-input').required = true;
+    
+    // Đánh số Index
+    clone.querySelector('.color-input').name = `variants[${variantIndex}].color`;
+    clone.querySelector('.size-input').name = `variants[${variantIndex}].size`;
+    clone.querySelector('.stock-input').name = `variants[${variantIndex}].stockQuantity`;
+    
+    document.getElementById('variant-container').appendChild(clone);
+    variantIndex++;
+}
+
+// JS XÓA DÒNG 
+function removeRow(button) {
+    // Tìm cái dòng cha (tr hoặc div.row) chứa cái nút Xóa này và giết nó
+    let row = button.closest('.image-row') || button.closest('.variant-row');
+    if (row) {
+        row.remove();
+    }
+}

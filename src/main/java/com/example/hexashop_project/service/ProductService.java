@@ -1,19 +1,26 @@
 package com.example.hexashop_project.service;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.example.hexashop_project.dto.ProductDto;
+import com.example.hexashop_project.dto.ProductVariantDto;
 import com.example.hexashop_project.model.Category;
 import com.example.hexashop_project.model.Product;
+import com.example.hexashop_project.model.ProductImage;
+import com.example.hexashop_project.model.ProductVariant;
 import com.example.hexashop_project.repository.CategoryRepository;
 import com.example.hexashop_project.repository.ProductRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService {
@@ -74,62 +81,6 @@ public class ProductService {
         return productRepository.searchProducts(categoryId, name, pageable);
     }
 
-    // THÊM MỚI SẢN PHẨM (Kèm Upload Ảnh)
-    public Product insert(ProductDto dto) throws Exception {
-        Product product = new Product();
-        
-        product.setName(dto.getName());
-        product.setPrice(dto.getPrice());
-        product.setSalePrice(dto.getSalePrice());
-        product.setShortDescription(dto.getShortDescription());
-        product.setDetailDescription(dto.getDetailDescription());
-        product.setIsHot(dto.getIsHot() != null ? dto.getIsHot() : false);
-        product.setStatus(dto.getStatus() != null ? dto.getStatus() : true);
-        product.setCreateDate(new Date());
-        
-        // Thiết lập Danh mục (Khóa ngoại)
-        if (dto.getCategoryId() != null && dto.getCategoryId() > 0) {
-            Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
-            product.setCategory(category);
-        }
-        
-        // XỬ LÝ UPLOAD ẢNH ĐẠI DIỆN
-        if (dto.getAvatarFile() != null && !dto.getAvatarFile().isEmpty()) {
-            String path = fileUploadService.uploadFile(dto.getAvatarFile());
-            product.setAvatar(path); // Lưu đường dẫn "/UploadFiles/..." vào Database
-        }
-        
-        return productRepository.save(product);
-    }
-
-    // CẬP NHẬT SẢN PHẨM
-    public Product update(Integer id, ProductDto dto) throws Exception {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new Exception("Product not found"));
-        
-        product.setName(dto.getName());
-        product.setPrice(dto.getPrice());
-        product.setSalePrice(dto.getSalePrice());
-        product.setShortDescription(dto.getShortDescription());
-        product.setDetailDescription(dto.getDetailDescription());
-        product.setIsHot(dto.getIsHot() != null ? dto.getIsHot() : false);
-        product.setStatus(dto.getStatus() != null ? dto.getStatus() : true);
-        product.setUpdateDate(new Date());
-        
-        if (dto.getCategoryId() != null && dto.getCategoryId() > 0) {
-            Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
-            product.setCategory(category);
-        }
-        
-        // XỬ LÝ UPLOAD ẢNH (Chỉ cập nhật ảnh mới nếu người dùng có chọn file)
-        if (dto.getAvatarFile() != null && !dto.getAvatarFile().isEmpty()) {
-            String path = fileUploadService.uploadFile(dto.getAvatarFile());
-            product.setAvatar(path);
-        }
-        
-        return productRepository.save(product);
-    }
-
     // XÓA MỀM
     public void inactive(Integer id) {
         Product product = productRepository.findById(id).orElse(null);
@@ -138,4 +89,83 @@ public class ProductService {
             productRepository.save(product);
         }
     }
+    
+    @Transactional
+    public void saveProduct(ProductDto dto) throws Exception {
+        Product product;
+        boolean isUpdate = (dto.getId() != null); // Biến kiểm tra xem là Thêm mới hay Sửa
+        
+        if (isUpdate) {
+            // NẾU LÀ CẬP NHẬT
+            product = productRepository.findById(dto.getId()).orElseThrow(() -> new Exception("Product not found"));
+            product.getVariants().clear(); // Xóa các phân loại cũ để ghi đè cái mới
+            product.setUpdateDate(new Date());
+        } else {
+            // NẾU LÀ THÊM MỚI
+            product = new Product();
+            product.setCreateDate(new Date());
+        }
+
+        // AP THÔNG TIN CƠ BẢN
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setSalePrice(dto.getSalePrice());
+        product.setShortDescription(dto.getShortDescription());
+        product.setDetailDescription(dto.getDetailDescription());
+        product.setIsHot(dto.getIsHot() != null ? dto.getIsHot() : false);
+        product.setStatus(dto.getStatus() != null ? dto.getStatus() : true);
+
+        // MAP CATEGORY
+        if (dto.getCategoryId() != null && dto.getCategoryId() > 0) {
+            Category category = categoryRepository.findById(dto.getCategoryId()).orElse(null);
+            product.setCategory(category);
+        }
+        
+        // XỬ LÝ UPLOAD ẢNH ĐẠI DIỆN (AVATAR)
+        if (dto.getAvatarFile() != null && !dto.getAvatarFile().isEmpty()) {
+            String avatarPath = fileUploadService.uploadFile(dto.getAvatarFile());
+            product.setAvatar(avatarPath); 
+        }
+        
+        // MAP BIẾN THỂ (VARIANTS)
+        if (dto.getVariants() != null && !dto.getVariants().isEmpty()) {
+            for (ProductVariantDto vDto : dto.getVariants()) {
+                if (vDto.getColor() != null && !vDto.getColor().trim().isEmpty()) { 
+                    ProductVariant variant = new ProductVariant();
+                    variant.setColor(vDto.getColor());
+                    variant.setSize(vDto.getSize());
+                    variant.setStockQuantity(vDto.getStockQuantity());
+                    
+                    variant.setProduct(product); 
+                    product.getVariants().add(variant); 
+                }
+            }
+        }
+
+        // XỬ LÝ UPLOAD ẢNH PHỤ (IMAGES)
+        if (dto.getImageFiles() != null && !dto.getImageFiles().isEmpty()) {
+            for (int i = 0; i < dto.getImageFiles().size(); i++) {
+                MultipartFile file = dto.getImageFiles().get(i);
+                
+                if (!file.isEmpty()) {
+                    // Sửa lại gọi đúng hàm của fileUploadService
+                    String filePath = fileUploadService.uploadFile(file); 
+                    
+                    ProductImage image = new ProductImage();
+                    image.setPath(filePath);
+                    
+                    if (dto.getProductImages() != null && dto.getProductImages().size() > i) {
+                        image.setTitle(dto.getProductImages().get(i).getTitle());
+                    }
+                    
+                    image.setProduct(product);
+                    product.getProductImages().add(image); 
+                }
+            }
+        }
+
+        // LƯU VÀO DATABASE
+        productRepository.save(product);
+    }
+  
 }

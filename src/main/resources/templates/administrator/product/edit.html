@@ -38,11 +38,11 @@
                 <div class="form-wrap">
                     <div th:if="${saveError}" class="alert alert-danger">Có lỗi khi lưu dữ liệu!</div>
 
-                    <form id="formEditProduct" th:object="${productDto}" 
-						      th:onsubmit="|submitEditAjax(event, ${product.id}, ${currentPage ?: 0})|" 
-						      enctype="multipart/form-data">
+                    <form id="formEditProduct" th:object="${productDto}" method="post" enctype="multipart/form-data"
+						      th:onsubmit="|submitEditAjax(event, ${product.id}, ${currentPage ?: 0})|">
                         <div class="row">
                             <div class="col-md-8">
+                            	<input type="hidden" th:field="*{id}" />
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Tên sản phẩm <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
@@ -65,6 +65,96 @@
                                     <label class="form-label fw-bold">Mô tả ngắn</label>
                                     <textarea class="form-control" rows="2" th:field="*{shortDescription}"></textarea>
                                 </div>
+                                
+                                <div class="card mb-5 shadow-sm">
+								    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+								        <h5 class="mb-0 text-success"><i class="fa fa-tags"></i> Phân loại Màu sắc & Kích thước</h5>
+								        <button type="button" class="btn btn-sm btn-outline-success" onclick="addMoreVariantRow()">
+								            <i class="fa fa-plus"></i> Thêm phân loại
+								        </button>
+								    </div>
+								    <div class="card-body">
+								        <div class="table-responsive">
+								            <table class="table table-bordered text-center align-middle">
+								                <thead class="table-light">
+								                    <tr>
+								                        <th>Màu sắc</th>
+								                        <th>Kích thước</th>
+								                        <th>Số lượng tồn kho</th>
+								                        <th style="width: 50px;">Xóa</th>
+								                    </tr>
+								                </thead>
+								                <tbody id="variant-container">
+								                    
+								                    <!-- Hiển thị các biến thể ĐÃ CÓ trong DB -->
+								                    <tr th:if="${product.variants != null}" th:each="var, stat : ${product.variants}" class="variant-row">
+								                        <input type="hidden" th:name="|variants[${stat.index}].id|" th:value="${var.id}">
+								                        
+								                        <td><input type="text" class="form-control" th:name="|variants[${stat.index}].color|" th:value="${var.color}" placeholder="VD: Đen, Trắng..." required></td>
+								                        <td><input type="text" class="form-control text-uppercase" th:name="|variants[${stat.index}].size|" th:value="${var.size}" placeholder="S, M, L..." required></td>
+								                        <td><input type="number" class="form-control" th:name="|variants[${stat.index}].stockQuantity|" th:value="${var.stockQuantity}" min="0" required></td>
+								                        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)"><i class="fa fa-trash"></i></button></td>
+								                    </tr>
+								                    
+								                    <!-- Dòng mẫu ẩn (Template) cho Variant -->
+								                    <tr class="variant-row d-none" id="variant-template">
+								                        <td><input type="text" class="form-control color-input" placeholder="VD: Đen, Trắng..."></td>
+								                        <td><input type="text" class="form-control text-uppercase size-input" placeholder="S, M, L..."></td>
+								                        <td><input type="number" class="form-control stock-input" value="10" min="0"></td>
+								                        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)"><i class="fa fa-trash"></i></button></td>
+								                    </tr>
+								                    
+								                </tbody>
+								            </table>
+								        </div>
+								    </div>
+								</div>
+								
+								<div class="card mt-4 mb-4 shadow-sm">
+								    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+								        <h5 class="mb-0 text-primary"><i class="fa fa-images"></i> Ảnh phụ của sản phẩm</h5>
+								        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addMoreImageRow()">
+								            <i class="fa fa-plus"></i> Thêm ảnh
+								        </button>
+								    </div>
+								    <div class="card-body">
+								        <div id="image-container">
+								            <div th:if="${product.productImages != null}">
+								                <div class="row align-items-center mb-3 image-row" th:each="img, stat : ${product.productImages}">
+								                    <input type="hidden" th:name="|productImages[${stat.index}].id|" th:value="${img.id}">
+								                    
+								                    <div class="col-md-2">
+								                        <img th:src="@{${img.path}}" class="img-thumbnail" style="height: 60px; width: 60px; object-fit: cover;">
+								                    </div>
+								                    <div class="col-md-4">
+								                        <input type="text" class="form-control" th:name="|productImages[${stat.index}].title|" th:value="${img.title}" placeholder="Tiêu đề ảnh (tùy chọn)">
+								                    </div>
+								                    <div class="col-md-5">
+								                        <input type="hidden" th:name="|productImages[${stat.index}].path|" th:value="${img.path}">
+								                        <input type="file" class="form-control" th:name="|imageFiles[${stat.index}]|" accept="image/*">
+								                    </div>
+								                    <div class="col-md-1">
+								                        <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeRow(this)"><i class="fa fa-trash"></i></button>
+								                    </div>
+								                </div>
+								            </div>
+								            
+								            <div class="row align-items-center mb-3 image-row d-none" id="image-template">
+								                <div class="col-md-2 text-center text-muted"><i class="fa fa-image fa-2x"></i></div>
+								                <div class="col-md-4">
+								                    <input type="text" class="form-control title-input" placeholder="Tiêu đề ảnh (tùy chọn)">
+								                </div>
+								                <div class="col-md-5">
+								                    <input type="file" class="form-control file-input" accept="image/*">
+								                </div>
+								                <div class="col-md-1">
+								                    <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeRow(this)"><i class="fa fa-trash"></i></button>
+								                </div>
+								            </div>
+								
+								        </div>
+								    </div>
+								</div>
                             </div>
 
                             <div class="col-md-4 border-start">
@@ -100,12 +190,12 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="mb-3">
                             <label class="form-label fw-bold">Mô tả chi tiết</label>
                             <textarea class="form-control" rows="5" th:field="*{detailDescription}"></textarea>
                         </div>
-
+                        
                         <hr class="my-4">
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
 					        <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Cập Nhật</button>

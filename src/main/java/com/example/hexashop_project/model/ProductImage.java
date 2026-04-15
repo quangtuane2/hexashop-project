@@ -1,5 +1,7 @@
 package com.example.hexashop_project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class ProductImage extends BaseModel {
     // Khóa ngoại: Nhiều Ảnh thuộc về 1 Sản phẩm 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
     public String getTitle() { return title; }

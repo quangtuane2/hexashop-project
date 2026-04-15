@@ -139,137 +139,150 @@ $(document).ready(function(){
     }
 });
 
-/* XỬ LÝ TRANG CHI TIẾT SẢN PHẨM (Single Product) */
-
-// Giả lập Cơ sở dữ liệu (Database) sản phẩm
-// thông tin các sản phẩm  như bên trang men.html 
-const products = [
-    {
-        id: 1,
-        name: "Classic Spring White",
-        price: 120.00,
-        image: "images/men-01.png",
-        description: "Đây là chiếc áo sơ mi trắng cổ điển, phong cách lịch lãm dành cho quý ông."
-    },
-    {
-        id: 2,
-        name: "Classic Spring Jacket",
-        price: 90.00,
-        image: "images/men-02.png",
-        description: "Áo khoác nhẹ mùa xuân, thoáng mát và thời trang."
-    },
-    {
-        id: 3,
-        name: "Classic Spring Red",
-        price: 150.00,
-        image: "images/men-03.png",
-        description: "Màu đỏ nổi bật, chất liệu cotton 100% thấm hút mồ hôi."
-    },
-   
-    {
-        id: 4, 
-        name: "Men's Special Edition",
-        price: 200.00,
-        image: "images/men-04.png", 
-        description: "Phiên bản đặc biệt giới hạn."
-    },
-    //women
-    {
-        id: 5,
-        name: "Classic Spring White",
-        price: 120.00,
-        image: "images/women-01.png",
-        description: "Đây là chiếc áo sơ mi trắng cổ điển, phong cách lịch lãm dành cho quý ba."
-    },
-    {
-        id: 6,
-        name: "Classic Spring Jacket",
-        price: 90.00,
-        image: "images/women-02.png",
-        description: "Áo khoác nhẹ mùa xuân, thoáng mát và thời trang."
-    },
-    {
-        id: 7,
-        name: "Classic Spring Red",
-        price: 150.00,
-        image: "images/women-03.png",
-        description: "Màu đỏ nổi bật, chất liệu cotton 100% thấm hút mồ hôi."
-    },
-   
-    {
-        id: 8, 
-        name: "Men's Special Edition",
-        price: 200.00,
-        image: "images/women-04.png", 
-        description: "Phiên bản đặc biệt giới hạn."
-    },
-    //kids
-    {
-        id: 9,
-        name: "Classic Spring White",
-        price: 120.00,
-        image: "images/kids-01.png",
-        description: "Đây là chiếc áo sơ mi trắng cổ điển."
-    },
-    {
-        id: 10,
-        name: "Classic Spring Jacket",
-        price: 90.00,
-        image: "images/kids-02.png",
-        description: "Áo khoác nhẹ mùa xuân, thoáng mát và thời trang."
-    },
-    {
-        id: 11,
-        name: "Classic Spring Red",
-        price: 150.00,
-        image: "images/kids-03.png",
-        description: "Màu đỏ nổi bật, chất liệu cotton 100% thấm hút mồ hôi."
-    },
-   
-    {
-        id: 12, 
-        name: "Men's Special Edition",
-        price: 200.00,
-        image: "images/kids-04.png", 
-        description: "Phiên bản đặc biệt giới hạn."
-    }
-
-];
-
-// Hàm lấy tham số ID từ URL (Ví dụ: ?id=1)
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-}
-
-//  Hàm hiển thị dữ liệu lên màn hình
-function loadProductDetail() {
-    // Chỉ chạy code này nếu đang ở trang single-product.html (kiểm tra xem có thẻ product-name không)
-    const nameElement = document.getElementById('product-name');
+function loadWomenLatestPage(pageIndex) {
+    if (pageIndex < 0) return; // Chặn nếu số trang < 0
     
-    if (nameElement) {
-        // Lấy ID từ trên thanh địa chỉ
-        const productId = getQueryParam('id');
-        
-        // Tìm sản phẩm trong mảng 'products' có id trùng với id trên url
-        // Lưu ý: productId lấy từ URL là chuỗi, cần so sánh lỏng (==) hoặc ép kiểu
-        const product = products.find(p => p.id == productId);
-
-        if (product) {
-            // Nếu tìm thấy -> Gán dữ liệu vào HTML
-            document.getElementById('product-name').innerText = product.name;
-            document.getElementById('product-price').innerText = '$' + product.price;
-            document.getElementById('product-desc').innerText = product.description;
-            document.getElementById('product-img').src = product.image;
-        } else {
-            // Nếu không tìm thấy (ví dụ id=999)
-            document.getElementById('product-name').innerText = "Sản phẩm không tồn tại";
-            document.getElementById('product-img').style.display = 'none';
-        }
-    }
+    fetch('/women/latest-ajax?page=' + pageIndex)
+        .then(response => response.text()) // Nhận về cục HTML
+        .then(html => {
+            // Đập bỏ nguyên cái khối div cũ, thay bằng khối div mới vừa lấy về
+            document.getElementById('women-latest-section').outerHTML = html;
+			document.getElementById('women-latest-section').scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => console.error('Lỗi khi tải trang Women Latest:', error));
 }
 
-// Gọi hàm khi trang tải xong
-$(document).ready(function() {
-    loadProductDetail();
+function loadWomenCasualPage(pageIndex) {
+    if (pageIndex < 0) return; 
+    
+    fetch('/women/casual-ajax?page=' + pageIndex)
+        .then(response => response.text()) 
+        .then(html => {
+            document.getElementById('women-casual-section').outerHTML = html;
+			document.getElementById('women-casual-section').scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => console.error('Lỗi khi tải trang Women Casual:', error));
+}
+
+function loadMenLatestPage(pageIndex) {
+    if (pageIndex < 0) return; 
+    
+    fetch('/men/latest-ajax?page=' + pageIndex)
+        .then(response => response.text()) 
+        .then(html => { 
+            document.getElementById('men-latest-section').outerHTML = html;
+			document.getElementById('men-latest-section').scrollIntoView({ behavior: 'smooth' });
+			})
+        .catch(error => console.error('Lỗi khi tải trang Men Latest:', error));
+}
+
+function loadMenCasualPage(pageIndex) {
+    if (pageIndex < 0) return; 
+    
+    fetch('/men/casual-ajax?page=' + pageIndex)
+        .then(response => response.text()) 
+        .then(html => { 
+            document.getElementById('men-casual-section').outerHTML = html;
+			document.getElementById('men-casual-section').scrollIntoView({ behavior: 'smooth' });
+			})
+        .catch(error => console.error('Lỗi khi tải trang Men Casual:', error));
+}
+
+function loadKidsLatestPage(pageIndex) {
+    if (pageIndex < 0) return; 
+    
+    fetch('/kids/latest-ajax?page=' + pageIndex)
+        .then(response => response.text()) 
+        .then(html => { 
+            document.getElementById('kids-latest-section').outerHTML = html;
+			document.getElementById('kids-latest-section').scrollIntoView({ behavior: 'smooth' });
+			})
+        .catch(error => console.error('Lỗi khi tải trang Kids Latest:', error));
+}
+
+function loadKidsCasualPage(pageIndex) {
+    if (pageIndex < 0) return; 
+    
+    fetch('/kids/casual-ajax?page=' + pageIndex)
+        .then(response => response.text()) 
+        .then(html => { 
+            document.getElementById('kids-casual-section').outerHTML = html;
+			document.getElementById('kids-casual-section').scrollIntoView({ behavior: 'smooth' });
+			})
+        .catch(error => console.error('Lỗi khi tải trang Kids Casual:', error));
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    /* 1. XỬ LÝ GALLERY (Thumbnails và Arrows) */
+    const mainImage = document.getElementById('mainImage');
+    const thumbnails = document.querySelectorAll('.thumbnail-item');
+    const prevBtn = document.getElementById('prevImage');
+    const nextBtn = document.getElementById('nextImage');
+    
+    let currentImageIndex = 0;
+    
+    function updateMainImage(index) {
+        currentImageIndex = index;
+        mainImage.src = thumbnails[index].src;
+        thumbnails.forEach(t => t.classList.remove('active'));
+        thumbnails[index].classList.add('active');
+    }
+    
+    if (prevBtn && nextBtn && thumbnails.length > 0) {
+        prevBtn.addEventListener('click', () => {
+            let newIndex = currentImageIndex - 1;
+            if (newIndex < 0) newIndex = thumbnails.length - 1; 
+            updateMainImage(newIndex);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            let newIndex = currentImageIndex + 1;
+            if (newIndex >= thumbnails.length) newIndex = 0; 
+            updateMainImage(newIndex);
+        });
+        
+        thumbnails.forEach((thumb, index) => {
+            thumb.addEventListener('click', () => updateMainImage(index));
+        });
+    }
+    
+    /* 2. XỬ LÝ CHỌN MÀU / SIZE */
+    function handleSelection(selector) {
+        document.querySelectorAll(selector).forEach(box => {
+            box.addEventListener('click', function() {
+                document.querySelectorAll(selector).forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    }
+    handleSelection('.color-box');
+    handleSelection('.size-box');
+    
+    /* 3. XỬ LÝ SỐ LƯỢNG (Qty Selector) */
+    const qtyMinus = document.getElementById('qtyMinus');
+    const qtyPlus = document.getElementById('qtyPlus');
+    const qtyInput = document.getElementById('qtyInput');
+    
+    if(qtyMinus && qtyPlus && qtyInput) {
+        qtyMinus.addEventListener('click', () => {
+            let val = parseInt(qtyInput.value);
+            if (val > 1) qtyInput.value = val - 1;
+        });
+        qtyPlus.addEventListener('click', () => {
+            let val = parseInt(qtyInput.value);
+            qtyInput.value = val + 1;
+        });
+    }
 });
+
+function switchTab(element, tabId) {
+    // 1. Gỡ viền đen của tất cả các chữ Tab
+    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+    // Thêm viền đen vào Tab vừa bấm
+    element.classList.add('active');
+
+    // 2. Giấu tất cả các nội dung đi
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    // Chỉ hiện nội dung của Tab vừa bấm
+    document.getElementById(tabId).classList.add('active');
+}

@@ -34,59 +34,129 @@
         </div>
     </header>
 
-    <section class="section" id="product">
-        <div class="container">
-            <div class="row">
-                
-                <div class="col-lg-8">
-                    <div class="left-images">
-                        <img id="product-img" th:src="@{/assets/images/men-01.png}" alt="Product Image">
-                        </div>
-                </div>
+	<section class="section" id="product" style="background-color: white; ">
+	    <div class="container product-detail-container">
+	        
+	        <div class="product-gallery-area">
+	            
+	            <div class="thumbnail-strip">
+	                <img th:each="img, status : ${productImages}" 
+	                     th:src="@{${img}}" 
+	                     alt="Thumbnail" 
+	                     class="thumbnail-item" 
+	                     th:classappend="${status.index == 0} ? 'active'">               
+	            </div>
+	            
+	            <div class="main-image-wrapper">
+	                <img th:if="${product.avatar != null}" th:src="@{${product.avatar}}" alt="Sản phẩm chính" id="mainImage">
+	                <img th:unless="${product.avatar != null}" th:src="@{/assets/images/default-product.jpg}" alt="Sản phẩm chính" id="mainImage">
+	                
+	                <div class="gallery-arrow arrow-prev" id="prevImage">
+	                    <i class="fa fa-chevron-left fa-lg"></i>
+	                </div>
+	                <div class="gallery-arrow arrow-next" id="nextImage">
+	                    <i class="fa fa-chevron-right fa-lg"></i>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="product-info-area">
+	            
+	            <h1 th:text="${product.name}">Tên Sản Phẩm</h1>
+	            
+	            <div class="product-prices">
+	                <span class="current-price" th:text="${#numbers.formatDecimal(product.salePrice != null && product.salePrice > 0 ? product.salePrice : product.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></span>
+	                <del class="original-price" th:if="${product.salePrice != null && product.salePrice > 0}" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' $'"></del>
+	            </div>
+	            
+	            <ul class="stars" style="color: #ff5e00; list-style: none; padding: 0; display: flex; gap: 5px;">
+	                <li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>
+	            </ul>
+	            
+	            <p class="freeship-notice">MIỄN PHÍ VẬN CHUYỂN ĐƠN HÀNG TỪ 299K</p>
+	                
+	            <p th:text="${product.shortDescription}" style="color: #555;">Mô tả ngắn...</p>         
+	            
+	            <div class="option-section">
+				    <p class="option-title">Màu sắc: <span id="selected-color-name" class="text-primary fw-bold"></span></p>
+				    <div class="color-options">
+				        <div th:each="color, status : ${colors}" 
+				             class="color-box" 
+				             th:style="'background-color:' + ${color.toLowerCase()}" 
+				             th:attr="data-color=${color}"></div>
+				    </div>
+				</div>
+	            
+				<div class="option-section mt-3">
+				    <div class="d-flex justify-content-between align-items-center mb-2" style="max-width: 250px;">
+				        <p class="option-title m-0">Kích thước: <span id="selected-size-name" class="text-danger fw-bold"></span></p>
+				        <a href="#" class="size-guide">Hướng dẫn tính size</a>
+				    </div>
+				    <div class="size-options">
+				        <div th:each="size : ${sizes}" 
+				             class="variant-box size-box" 
+				             th:text="${size}" 
+				             th:attr="data-size=${size}"></div> 
+				    </div>
+				</div>
+	            
+				<div class="qty-selector-container">
+				    <div class="qty-selector">
+				        <button type="button" class="qty-btn" id="qtyMinus">-</button>
+				        <input type="number" value="1" min="1" class="qty-input" id="qtyInput">
+				        <button type="button" class="qty-btn" id="qtyPlus">+</button>
+				    </div>
+				    
+				    <div class="stock-status-wrapper">
+				        <span id="stock-status"></span>
+				    </div>
+				</div>
+	            
+	            <div class="action-buttons-area" style="max-width: 400px;">
+	                <button class="btn-action btn-buy-now">Mua Ngay</button>
+	                <button class="btn-action btn-secondary-action">Thêm Vào Giỏ</button>
+	                <button class="btn-action btn-secondary-action">Xem cửa hàng có hàng</button>
+	            </div>
+	        </div>
+	    </div>
+	    
+		<div class="container product-tabs-container">
+		    
+		    <div class="product-tabs">
+		        <div class="tab-item active" onclick="switchTab(this, 'tab-description')">Mô Tả Sản Phẩm</div>
+		        <div class="tab-item" onclick="switchTab(this, 'tab-policy')">Chính Sách Đổi Hàng</div>
+		    </div>
 
-                <div class="col-lg-4">
-                    <div class="right-content">
-                        <h4 id="product-name">Classic Spring</h4>
-                        
-                        <span class="price" id="product-price">$120.00</span>
+		    <div class="tab-content active" id="tab-description">
+		        
+				<div th:if="${product.detailDescription != null}">
+				    <ul class="custom-bullet-list">
+				        <li th:each="sentence : ${#strings.arraySplit(product.detailDescription, '.')}" 
+				            th:if="${!#strings.isEmpty(sentence.trim())}">      
+				            <span th:text="${sentence.trim()} + '.'"></span>
+				        </li>
+				    </ul>
+				</div>
 
-                        <ul class="stars">
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                        </ul>
-                        
-                        <span class="desc" id="product-desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod kon tempor incididunt ut labore.
-                        </span>
-
-                        <div class="quantity-content">
-                            <div class="left-content">
-                                <h6>No. of Orders</h6>
-                            </div>
-                            <div class="right-content">
-                                <div class="qty-btn-group">
-                                    <button class="minus">-</button>
-                                    <input type="text" value="1" readonly>
-                                    <button class="plus">+</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="total">
-                            <h4>Total: $120.00</h4> <div class="main-border-button">
-                                <a th:href="@{/cart}">Add To Cart</a>
-                            </div>
-                        </div>
-                        
-                        </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
+		        <div class="description-images">
+		            <h3 th:text="${product.name}">Tên Sản Phẩm</h3>
+		            
+		            <img th:each="img : ${productImages}" th:src="@{${img}}" alt="Ảnh chi tiết sản phẩm">
+		        </div>
+		    </div>
+		
+		    <div class="tab-content" id="tab-policy">
+		        <p><strong>QUY ĐỊNH ĐỔI TRẢ HÀNG:</strong></p>
+		        <ul>
+		            <li>Hỗ trợ đổi size hoặc đổi mẫu trong vòng <strong>30 ngày</strong> kể từ ngày nhận hàng.</li>
+		            <li>Sản phẩm còn nguyên tem mác, chưa qua giặt ủi hoặc chỉnh sửa form dáng.</li>
+		            <li>Không áp dụng đổi trả đối với các sản phẩm đang trong chương trình Flash Sale hoặc đồ lót.</li>
+		            <li>Vui lòng mang theo hóa đơn mua hàng nếu đổi trực tiếp tại cửa hàng.</li>
+		        </ul>
+		    </div>
+		    
+		</div>
+	</section>
 
     <footer>
         <div class="container">
@@ -142,7 +212,132 @@
             </div>
         </div>
     </footer>
-
+	<script th:inline="javascript">
+    	// Thymeleaf parse mảng JSON từ Backend
+	    const productVariants = /*[[${product.variants}]]*/ [];
+	
+	    document.addEventListener("DOMContentLoaded", function() {
+	        // KHỞI TẠO BIẾN DOM
+	        const colorBoxes = document.querySelectorAll('.color-box');
+	        const sizeBoxes = document.querySelectorAll('.size-box');
+	        const stockStatus = document.getElementById('stock-status');
+	        const qtyInput = document.getElementById('qtyInput');
+	        const btnBuyNow = document.querySelector('.btn-buy-now');
+	        const btnAddToCart = document.querySelector('.btn-secondary-action'); 
+	        
+	        // BIẾN TRẠNG THÁI
+	        let selectedColor = null;
+	        let selectedSize = null;
+	        let currentMaxStock = 0;
+	
+	        // HÀM TRUNG TÂM: CẬP NHẬT GIAO DIỆN VÀ TỒN KHO
+	        function refreshDisplay() {
+	            // Quét qua các Size để xem còn hàng không (Dựa vào Màu đã chọn)
+	            sizeBoxes.forEach(box => {
+	                const size = box.getAttribute('data-size');
+	                const variant = productVariants.find(v => v.color === selectedColor && v.size === size);
+	                
+	                if (variant && variant.stockQuantity > 0) {
+	                    box.classList.remove('disabled'); // Mở khóa nút Size
+	                } else {
+	                    box.classList.add('disabled'); // Khóa nút Size
+	                    // Nếu Size đang chọn bị khóa, thì gỡ bỏ trạng thái chọn
+	                    if (selectedSize === size) {
+	                        box.classList.remove('active');
+	                        selectedSize = null;
+	                        document.getElementById('selected-size-name').innerText = "";
+	                    }
+	                }
+	            });
+	
+	            // Kiểm tra điều kiện mở nút Mua hàng
+	            if (!selectedColor || !selectedSize) {
+	                stockStatus.innerText = "Vui lòng chọn Phân loại hàng";
+	                stockStatus.className = "ms-3 text-muted";
+	                toggleActionButtons(true);
+	                return;
+	            }
+	
+	            // Cập nhật số lượng tồn kho hiển thị
+	            const activeVariant = productVariants.find(v => v.color === selectedColor && v.size === selectedSize);
+	            if (activeVariant && activeVariant.stockQuantity > 0) {
+	                currentMaxStock = activeVariant.stockQuantity;
+	                stockStatus.innerText = `Còn ${currentMaxStock} sản phẩm`;
+	                stockStatus.className = "in-stock";
+	                
+	                // Giới hạn input không cho nhập lố kho
+	                if (parseInt(qtyInput.value) > currentMaxStock) qtyInput.value = currentMaxStock;
+	                
+	                toggleActionButtons(false); // Mở nút mua
+	            } else {
+	                currentMaxStock = 0;
+	                qtyInput.value = 1;
+	                stockStatus.innerText = "Hết hàng";
+	                stockStatus.className = "out-of-stock";
+	                toggleActionButtons(true); // Khóa nút mua
+	            }
+	        }
+	
+	        // HÀM PHỤ: KHÓA/MỞ NÚT MUA HÀNG
+	        function toggleActionButtons(isDisabled) {
+	            btnBuyNow.disabled = isDisabled;
+	            btnAddToCart.disabled = isDisabled;
+	            btnBuyNow.style.opacity = isDisabled ? '0.5' : '1';
+	            btnAddToCart.style.opacity = isDisabled ? '0.5' : '1';
+	        }
+	
+	        // SỰ KIỆN CLick MÀU SẮC
+	        colorBoxes.forEach(box => {
+	            box.addEventListener('click', function() {
+	                colorBoxes.forEach(b => b.classList.remove('active'));
+	                this.classList.add('active');
+	                
+	                selectedColor = this.getAttribute('data-color');
+	                document.getElementById('selected-color-name').innerText = selectedColor;
+	                
+	                refreshDisplay(); // Gọi 1 lần duy nhất
+	            });
+	        });
+	
+	        // SỰ KIỆN CLICK KÍCH THƯỚC
+	        sizeBoxes.forEach(box => {
+	            box.addEventListener('click', function() {
+	                if (this.classList.contains('disabled')) return; // Chặn click nếu hết hàng
+	                
+	                sizeBoxes.forEach(b => b.classList.remove('active'));
+	                this.classList.add('active');
+	                
+	                selectedSize = this.getAttribute('data-size');
+	                document.getElementById('selected-size-name').innerText = selectedSize;
+	                
+	                refreshDisplay(); // Gọi 1 lần duy nhất
+	            });
+	        });
+	
+	        // SỰ KIỆN TĂNG GIẢM SỐ LƯỢNG
+	        document.getElementById('qtyMinus').addEventListener('click', () => {
+	            let val = parseInt(qtyInput.value);
+	            if (val > 1) qtyInput.value = val - 1;
+	        });
+	        
+	        document.getElementById('qtyPlus').addEventListener('click', () => {
+	            let val = parseInt(qtyInput.value);
+	            if (currentMaxStock > 0 && val < currentMaxStock) {
+	                qtyInput.value = val + 1;
+	            } else if (val >= currentMaxStock && currentMaxStock > 0) {
+	                alert("Số lượng vượt quá tồn kho!");
+	            }
+	        });
+	
+	        // TỰ ĐỘNG CHỌN KHI VÀO TRANG
+	        if (colorBoxes.length > 0) {
+	            colorBoxes[0].click(); // Tự động chọn Màu đầu tiên
+	            // Tìm và tự chọn Size đầu tiên còn hàng
+	            const availableSize = Array.from(sizeBoxes).find(b => !b.classList.contains('disabled'));
+	            if (availableSize) availableSize.click();
+	        }
+	    });
+	</script>
     <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
     <script th:src="@{/assets/js/script.js}"></script>
 </body>

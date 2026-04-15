@@ -2,9 +2,13 @@ package com.example.hexashop_project.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.hexashop_project.model.Product;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,6 +26,16 @@ public class ProductDto {
 	
 	// Dùng để lưu đường dẫn ảnh hiển thị
 	private String avatar;
+	
+	
+	// Nhận danh sách các chữ (Màu, Size, Title...)
+    private List<ProductVariantDto> variants = new ArrayList<>();
+    
+    // Nhận danh sách thông tin text của ảnh phụ (Title)
+    private List<ProductImageDto> productImages = new ArrayList<>();
+
+    // Nhận danh sách các FILE ảnh phụ được upload lên
+    private List<MultipartFile> imageFiles = new ArrayList<>();
 
 	@NotNull(message = "Price is required")
 	@DecimalMin(value = "0.0", inclusive = true, message = "Price must be greater than or equal to 0")
@@ -50,6 +64,20 @@ public class ProductDto {
 
 	public ProductDto() {
 		super();
+	}
+	
+	public ProductDto(Product product) {
+	    this.name = product.getName();
+	    this.price = product.getPrice();
+	    this.salePrice = product.getSalePrice();
+	    this.isHot = product.getIsHot();
+	    this.shortDescription = product.getShortDescription();
+	    this.detailDescription = product.getDetailDescription();
+	    this.status = product.getStatus();
+        
+	    if (product.getCategory() != null) {
+	        this.categoryId = product.getCategory().getId();
+	    }
 	}
 
 	public Integer getId() { return id; }
@@ -93,4 +121,29 @@ public class ProductDto {
 
 	public Boolean getStatus() { return status; }
 	public void setStatus(Boolean status) { this.status = status; }
+
+	public List<ProductVariantDto> getVariants() {
+		return variants;
+	}
+
+	public void setVariants(List<ProductVariantDto> variants) {
+		this.variants = variants;
+	}
+
+	public List<ProductImageDto> getProductImages() {
+		return productImages;
+	}
+
+	public void setProductImages(List<ProductImageDto> productImages) {
+		this.productImages = productImages;
+	}
+
+	public List<MultipartFile> getImageFiles() {
+		return imageFiles;
+	}
+
+	public void setImageFiles(List<MultipartFile> imageFiles) {
+		this.imageFiles = imageFiles;
+	}
+	
 }

@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.validation.FieldError;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,13 +102,14 @@ public class ProductController {
 
         try {
             // Gọi Service để lưu (Đã bao gồm xử lý upload ảnh trong Service)
-            productService.insert(productDto);
+            productService.saveProduct(productDto);
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("saveError", true);
             model.addAttribute("categories", categoryService.findAll());
             return "administrator/product/add";
         }
+        
 
         return "redirect:/admin/product";
     }
@@ -119,14 +122,7 @@ public class ProductController {
             return "redirect:/admin/product";
         }
 
-        ProductDto productDto = new ProductDto();
-        productDto.setName(product.getName());
-        productDto.setPrice(product.getPrice());
-        productDto.setSalePrice(product.getSalePrice());
-        productDto.setIsHot(product.getIsHot());
-        productDto.setShortDescription(product.getShortDescription());
-        productDto.setDetailDescription(product.getDetailDescription());
-        productDto.setStatus(product.getStatus());
+        ProductDto productDto = new ProductDto(product);
         
         // Chuyền đường dẫn ảnh hiện tại ra View để hiển thị
         productDto.setAvatar(product.getAvatar());
@@ -143,45 +139,11 @@ public class ProductController {
 
         return "administrator/product/edit";
     }
-
-    // XỬ LÝ CẬP NHẬT SẢN PHẨM
-//    @PostMapping("/edit/save")
-//    public String updateProduct(Model model, 
-//            @Valid @ModelAttribute ProductDto productDto, 
-//            @RequestParam Integer id, 
-//            BindingResult result) {
-//        
-//        Product product = productService.findById(id);
-//        if (product == null) return "redirect:/admin/product";
-//
-//        // Kiểm tra trùng tên với sản phẩm khác
-//        if (!productDto.getName().equalsIgnoreCase(product.getName()) && productService.existByName(productDto.getName())) {
-//            result.rejectValue("name", null, "Tên sản phẩm đã tồn tại!");
-//        }
-//
-//        if (result.hasErrors()) {
-//            productDto.setAvatar(product.getAvatar()); // Giữ lại đường dẫn ảnh khi có lỗi form
-//            model.addAttribute("product", product);
-//            model.addAttribute("productDto", productDto);
-//            model.addAttribute("categories", categoryService.findAll());
-//            return "administrator/product/edit";
-//        }
-//
-//        try {
-//            productService.update(id, productDto);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            model.addAttribute("saveError", true);
-//            return "administrator/product/edit";
-//        }
-//
-//        return "redirect:/admin/product";
-//    }
     
     @PostMapping("/edit-ajax/{id}")
     @ResponseBody
     public ResponseEntity<?> updateProductAjax(@PathVariable Integer id, @Valid @ModelAttribute ProductDto productDto, BindingResult result) {
-        
+    	productDto.setId(id);
         Map<String, String> errors = new HashMap<>();
 
         // Kiểm tra lỗi Validation từ @Valid (Để trống, sai định dạng...)
@@ -204,7 +166,7 @@ public class ProductController {
             }
 
             // Gọi Service để lưu cập nhật 
-            productService.update(id, productDto);
+            productService.saveProduct(productDto);
             
             return ResponseEntity.ok("Cập nhật sản phẩm thành công!");
         } catch (Exception e) {
@@ -212,15 +174,6 @@ public class ProductController {
             return ResponseEntity.badRequest().body("Lỗi khi cập nhật dữ liệu: " + e.getMessage());
         }
     }
-
-    // XÓA MỀM SẢN PHẨM
-//    @GetMapping("/delete")
-//    public String deleteProduct(@RequestParam Integer id) {
-//        if (id != null && id > 0) {
-//            productService.inactive(id);
-//        }
-//        return "redirect:/admin/product";
-//    }
     
     @DeleteMapping("/delete-ajax/{id}")
     @ResponseBody
