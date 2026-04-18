@@ -8,4 +8,8 @@ import com.example.hexashop_project.model.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
     // Thêm hàm tùy chọn để sau này làm chức năng Đăng nhập
     User findByUsername(String username);
+    
+    // Hàm để kiểm tra xem user/email đã bị ai đăng ký chưa
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }
