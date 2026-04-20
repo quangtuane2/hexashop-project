@@ -39,7 +39,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="tracking-title">Track Your Order</h2>
+                    <h3 class="tracking-title" th:if="${successMsg}" th:text="${successMsg}" style="color: green;"></h3>
+					<h2 class="tracking-title" th:unless="${successMsg}">Track Your Order</h2>
                 </div>
             </div>
 
@@ -50,39 +51,54 @@
                     </div>
                 </div>
 
-                <div class="row content-grid">
+                <div class="row content-grid">   
+                                
                     <div class="col-lg-3 col-md-6 info-col">
-                        <p class="date">July 10, 2022</p>
-                        <p class="order-no">Order No: 5142414241241</p>
+                        <p class="date" th:text="${#dates.format(order.createDate, 'MMMM dd, yyyy')}"></p>
+                        <p class="order-no" th:text="'Order No: ' + ${order.code}"></p>
                         
                         <div class="status-group">
-                            <p>Order Status: <span>New Order</span></p>
-                            <p>Packages in this Order: <span>1</span></p>
-                            <p>Total Items: <span>1</span></p>
+                            <p>Order Status: <span style="color: #ff5e00; font-weight: bold;" th:text="${order.orderStatus.name}">Pending</span></p>
+                            <p>Total Items: <span th:text="${order.saleOrderProducts.size()}">0</span></p>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-md-6 info-col">
                         <h5 class="sub-head">Ship to:</h5>
-                        <p class="address">Lahore Road, Sheikhupura</p>
+                        <p class="address"><strong th:text="${order.customerName}">Name</strong></p>
+                        <p class="address" th:text="${order.customerAddress}">Address</p>
+                        <p class="address" th:text="'Tel: ' + ${order.customerMobile}">Phone</p>
 
-                        <h5 class="sub-head mt-4">Payment Information:</h5>
-                        <p class="payment-info">Credit Card No: 2522 2322 5455 2566</p>
+                        <h5 class="sub-head mt-4">Payment Notes:</h5>
+                        <p class="payment-info" th:text="${order.description != null and order.description != '' ? order.description : 'No special notes'}"></p>
                     </div>
 
                     <div class="col-lg-3 col-md-6 info-col">
                         <h5 class="sub-head">Order Summary</h5>
                         <ul class="summary-list">
-                            <li>Subtotal: <span>120$</span></li>
-                            <li>Shipping: <span>20$</span></li>
-                            <li>Sales Tax: <span>0$</span></li>
-                            <li class="total">Total <span>140$</span></li>
+                            <li>Subtotal: <span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' $'"></span></li>
+                            <li>Shipping: <span>0 $</span></li>
+                            <li class="total">Total <span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' $'"></span></li>
                         </ul>
                     </div>
 
                     <div class="col-lg-3 col-md-6 action-col">
-                        <button class="btn-outline">Modify / Cancel Order</button>
-                        <button class="btn-solid">Discover More</button>
+                        <button type="button" class="btn-outline btn-cancel-order" 
+                                th:if="${order.orderStatus.name == 'Pending'}" 
+                                th:data-code="${order.code}">
+                            Modify / Cancel Order
+                        </button>
+                        
+                        <a th:href="@{/}" class="btn-solid" style="display: block; text-align: center; text-decoration: none; line-height: normal;">
+                            Discover More
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="row" th:unless="${order != null}">
+                    <div class="col-12 text-center" style="padding: 50px;">
+                        <h4>No new order information found..</h4>
+                        <a th:href="@{/}" class="btn btn-dark mt-3">Return to the Store</a>
                     </div>
                 </div>
             </div>
@@ -183,7 +199,55 @@
         </div>
     </footer>
 
-    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
-    <script th:src="@{/assets/js/script.js}"></script>
+    <script>
+		document.addEventListener("DOMContentLoaded", function() {
+		    const btnCancel = document.querySelector('.btn-outline');
+		
+		    if (btnCancel && btnCancel.innerText.includes("Cancel")) {
+		        btnCancel.addEventListener('click', function(e) {
+		            e.preventDefault();
+		            
+		            // Lấy mã đơn hàng từ giao diện
+		            const orderNoText = document.querySelector('.order-no').innerText;
+		            const orderCode = orderNoText.replace('Order No: ', '').trim();
+		
+		            if (confirm("Are you sure you want to cancel order " + orderCode + "? This action cannot be undone.")) {
+		                
+		                // Hiệu ứng đang xử lý
+		                btnCancel.innerText = "Processing...";
+		                btnCancel.disabled = true;
+		
+		                fetch('/api/order/cancel/' + orderCode, {
+		                    method: 'POST',
+		                    headers: {
+		                        'Content-Type': 'application/json'
+		                    }
+		                })
+		                .then(response => response.json())
+		                .then(data => {
+		                    if (data.status === 'success') {
+		                        alert(data.message);
+		                        // Cập nhật lại trạng thái trên giao diện mà không cần F5
+		                        document.querySelector('.status-group span').innerText = "Cancelled";
+		                        document.querySelector('.status-group span').style.color = "red";
+		                        document.querySelector('.tracking-title').innerText = "Order has been cancelled successfully.";
+		                        document.querySelector('.tracking-title').style.color = "red";
+		                        btnCancel.style.display = "none"; // Ẩn nút hủy sau khi hủy xong
+		                    } else {
+		                        alert("Error: " + data.message);
+		                        btnCancel.innerText = "Modify / Cancel Order";
+		                        btnCancel.disabled = false;
+		                    }
+		                })
+		                .catch(error => {
+		                    console.error('Error:', error);
+		                    alert("Connection error!");
+		                    btnCancel.disabled = false;
+		                });
+		            }
+		        });
+		    }
+		});
+	</script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.example.hexashop_project.cart;
 
 public class AddToCartRequest {
+	
     private Integer productId;
     private String color;
     private String size;

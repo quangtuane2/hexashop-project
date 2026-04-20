@@ -1,22 +1,56 @@
 package com.example.hexashop_project.cart;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tbl_cart_item")
 public class CartItem {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    // Trỏ ngược về cái Giỏ chứa nó
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 	
     private Integer productId;
     private String productName;
     private String productAvatar;
-    private Double price;
-    
+    private Double price; 
     private String color; 
     private String size;
-    
     private int quantity;
-    private int maxStock;
-
-    public int getMaxStock() { return maxStock; }
-    public void setMaxStock(int maxStock) { this.maxStock = maxStock; }
     
-    public Integer getProductId() {
+    @Transient // Không lưu maxStock vào DB, chỉ dùng để check logic
+    private int maxStock;
+    
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
+	public int getMaxStock() {
+		return maxStock;
+	}
+
+	public void setMaxStock(int maxStock) {
+		this.maxStock = maxStock;
+	}
+
+	public Integer getProductId() {
 		return productId;
 	}
 
@@ -73,6 +107,7 @@ public class CartItem {
 	}
 
 	// Hàm tiện ích tính tổng tiền của món này
+	@Transient
     public Double getSubTotal() {
         return price * quantity;
     }

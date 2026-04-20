@@ -63,7 +63,13 @@
                          <div class="login-form-card">
                             <h2>Hello ! <br> Login Here</h2>
                             
-                            <form th:action="@{/login}" method="post">
+                            <div th:if="${successMsg}" class="alert alert-success" style="color: green; margin-bottom: 15px; font-weight: bold;" th:text="${successMsg}"></div>
+    
+						    <div th:if="${param.error}" class="alert alert-danger" style="color: red; margin-bottom: 15px; font-weight: bold;">
+						        Sai tài khoản hoặc mật khẩu!
+						    </div>
+                            
+                            <form th:action="@{/do-login}" method="post">
                                 <div class="input-group">
                                     <input type="email" name="username" placeholder="Enter Email" required>
                                 </div>

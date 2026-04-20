@@ -7,21 +7,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.hexashop_project.model.Product;
 import com.example.hexashop_project.model.ProductImage;
 import com.example.hexashop_project.model.ProductVariant;
+import com.example.hexashop_project.model.SaleOrder;
+import com.example.hexashop_project.service.OrderService;
 import com.example.hexashop_project.service.ProductService;
+import com.example.hexashop_project.service.UserService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import jakarta.servlet.http.HttpSession;
 import com.example.hexashop_project.cart.Cart;
 import com.example.hexashop_project.cart.CartService;
+import com.example.hexashop_project.dto.UserRegisterDTO;
 
 @Controller
 public class HomeController {
@@ -31,6 +39,12 @@ public class HomeController {
     
     @Autowired
     private CartService cartService;
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private OrderService orderService;
 
     // Ánh xạ URL trang chủ (http://localhost:9090/ hoặc
     // http://localhost:9090/index)
@@ -241,10 +255,54 @@ public class HomeController {
     public String register() {
         return "customer/register";
     }
+    
+    // HÀM XỬ LÝ LƯU ĐĂNG KÝ
+    @PostMapping("/register")
+    public String processRegister(@ModelAttribute UserRegisterDTO dto, Model model, RedirectAttributes redirectAttributes) {
+    	String result = userService.registerUser(dto);
+        
+        if ("SUCCESS".equals(result)) {
+            // Nếu thành công, chuyển hướng về trang đăng nhập và báo thành công
+            redirectAttributes.addFlashAttribute("successMsg", "Đăng ký thành công! Vui lòng đăng nhập.");
+            return "redirect:/login";
+        } else {
+            // Nếu lỗi (trùng email, sai pass), ở lại trang đăng ký và báo lỗi
+            model.addAttribute("errorMsg", result);
+            return "customer/register";
+        }
+    }
 
     @GetMapping("/order-tracking")
     public String orderTracking() {
         return "customer/order-tracking";
+    }
+    
+    @GetMapping("/checkout")
+    public String checkout(HttpSession session, Model model) {
+        Cart cart = cartService.getCart(session);
+        
+        // Nếu giỏ hàng trống thì không cho thanh toán, quay lại giỏ
+        if (cart.getItems().isEmpty()) {
+            return "redirect:/cart";
+        }
+        
+        model.addAttribute("cart", cart);
+        return "customer/checkout";
+    }
+    
+    @PostMapping("/checkout")
+    public String processCheckout(@ModelAttribute SaleOrder orderData, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            SaleOrder successOrder = orderService.placeOrder(orderData, session);
+            
+            redirectAttributes.addFlashAttribute("order", successOrder);
+            redirectAttributes.addFlashAttribute("successMsg", "Congratulations! Your order has been placed successfully.");
+            
+            return "redirect:/order-tracking";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMsg", "Lỗi đặt hàng: " + e.getMessage());
+            return "redirect:/checkout";
+        }
     }
 
 }

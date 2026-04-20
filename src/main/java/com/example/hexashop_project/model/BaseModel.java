@@ -17,6 +17,12 @@ public class BaseModel {
 
     @Column(name = "update_date", nullable = true)
     private Date updateDate;
+    
+    @Column(name = "create_by", length = 120)
+    private String createBy;
+    
+    @Column(name = "update_by", length = 120)
+    private String updateBy;
 
     @Column(name = "status", nullable = true)
     private Boolean status;
@@ -44,8 +50,24 @@ public class BaseModel {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+    
+    public String getCreateBy() {
+		return createBy;
+	}
 
-    public Boolean getStatus() {
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public String getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy;
+	}
+
+	public Boolean getStatus() {
         return status;
     }
 

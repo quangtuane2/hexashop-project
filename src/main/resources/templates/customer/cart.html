@@ -71,7 +71,7 @@
                             <li><a th:href="@{/contact}">Contact Us</a></li>
                             <li class="cart-item">
                                 <a th:href="@{/cart}" class="active">
-                                    <i class="fa fa-shopping-cart"></i> Cart (0)
+                                    <i class="fa fa-shopping-cart"></i> Cart (<span th:text="${cart.totalQuantity}">0</span>)
                                 </a>
                             </li>
                         </ul>
@@ -162,7 +162,7 @@
                         </ul>
 
                         <div class="checkout-btn">
-                            <a th:href="@{/order-tracking}">Proceed To Checkout</a>
+                            <a th:href="@{/checkout}">Proceed To Checkout</a>
                         </div>
 
                         <div class="payment-cards">

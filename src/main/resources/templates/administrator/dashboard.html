@@ -81,11 +81,11 @@
         <div class="row">
             
             <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebarMenu">
-                <a href="index.html" class="brand-logo">HEXA ADMIN</a>
+                <a th:href="@{/admin}" class="brand-logo">HEXA ADMIN</a>
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a class="nav-link active" th:href="@{/admin}">
                                 <i class="fa fa-home"></i> Dashboard
                             </a>
                         </li>
@@ -94,7 +94,7 @@
                         	<i class="fa fa-list me-2"></i> Categories</a>
                     	</li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" th:href="@{/admin/product}">
                                 <i class="fa fa-box"></i> Products
                             </a>
                         </li>

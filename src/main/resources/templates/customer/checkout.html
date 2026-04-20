@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Hexashop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+	<style>
+        .checkout-page { padding: 50px 0 80px 0; background-color: #f2f3f5; }
+        
+        /* Card chứa form  */
+        .checkout-form-card, .order-summary-card {
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+        }
+
+        /* Tính năng dính chặt cho cột bên phải */
+        .sticky-summary {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 100px; /* Khoảng cách so với top khi cuộn */
+            z-index: 10;
+        }
+
+        .section-head { font-size: 20px; font-weight: 800; margin-bottom: 25px; color: #222; }
+        
+        /* Chỉnh chu ô nhập liệu: To hơn, viền bo nhẹ */
+        .form-group { margin-bottom: 24px; }
+        .form-group input, .form-group textarea {
+            width: 100%; 
+            padding: 16px 20px; /* Làm ô nhập to và thoáng hơn */
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            outline: none; 
+            transition: border-color 0.3s;
+            font-size: 15px;
+            color: #333;
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #888; }
+        .form-group input:focus, .form-group textarea:focus { border-color: #000; }
+        .form-group textarea { resize: none; }
+        
+        /* Giao diện Phương thức thanh toán */
+        .payment-methods-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden; 
+            margin-bottom: 24px;
+        }
+        .payment-option { 
+            display: flex; 
+            align-items: center; 
+            padding: 20px; 
+            margin: 0; 
+            border-bottom: 1px solid #ddd; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+        .payment-option:last-child { border-bottom: none; }
+        .payment-option:hover { background-color: #fafafa; }
+        .payment-option input[type="radio"] { 
+            width: 20px; height: 20px; margin-right: 15px; accent-color: #000; cursor: pointer;
+        }
+        .payment-icon { width: 30px; height: 30px; object-fit: contain; margin-right: 15px; }
+        .payment-text { font-size: 15px; color: #333; font-weight: 500; }
+        
+        /* Danh sách sản phẩm bên phải */
+        .checkout-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .checkout-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+        .checkout-item img { width: 70px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #f0f0f0; }
+        .checkout-item-info { flex: 1; }
+        .checkout-item-info h6 { font-weight: 700; margin: 0 0 5px 0; font-size: 14px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .checkout-item-info p.variant { margin: 0 0 8px 0; font-size: 13px; color: #777; }
+        
+        /* Mã khuyến mãi */
+        .promo-box { display: flex; gap: 10px; margin-top: 25px; margin-bottom: 25px; }
+        .promo-box input { flex: 1; padding: 14px 20px; border: 1px solid #ddd; border-radius: 8px; outline: none; font-size: 14px; }
+        .promo-box button { background: #000; color: white; border: none; border-radius: 8px; padding: 0 25px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .promo-box button:hover { background: red; }
+
+        /* Tổng tiền */
+        .order-total-list { list-style: none; padding: 0; margin: 0; }
+        .order-total-list li { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; color: #555;}
+        .order-total-list li.grand-total { border-top: 1px solid #eee; padding-top: 20px; margin-top: 5px; font-weight: 900; font-size: 18px; color: #000; }
+        
+        /* Nút Đặt hàng Đen Tuyển */
+        .btn-order {
+            width: 100%; height: 55px; background-color: #000; color: white; border: none;
+            border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 25px;
+        }
+        .btn-order:hover { background-color: red; }
+    </style>
+</head>
+<body>
+
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo"><img th:src="@{/assets/images/logo.png}" alt="Hexashop"></a>
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+                            <li class="cart-item">
+                                <a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i> Cart (<span th:text="${cart.totalQuantity}">0</span>)</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="checkout-page">
+        <div class="container">
+            <form th:action="@{/checkout}" method="POST">
+                <div class="row">
+                    
+                    <div class="col-lg-7 mb-4" style="margin-right: 50px">
+                        <div class="checkout-form-card" style="width: 650px">
+                            <h4 class="section-head">Shipping Information</h4>
+                            
+                            <div class="row" style="margin-left: 1px">
+                                <div class="col-md-6">
+                                    <div class="form-group" style="margin-right: 20px">
+                                        <input type="text" name="customerName" placeholder="Enter your full name" required style="padding-right: 70px">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="customerMobile" placeholder="Enter your phone" required style="padding-right: 70px">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="email" name="customerEmail" placeholder="Enter your email (Optional)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="text" placeholder="Nation: Vietnam" readonly style="background-color: #f9f9f9; color: #888; cursor: not-allowed;">
+                            </div>
+
+                            <div class="form-group">
+                                <textarea name="customerAddress" rows="3" placeholder="Shipping Address (Street name, City, District...)" required></textarea>
+                            </div>
+                            
+                            <h4 class="section-head mt-5">Payment Method</h4>
+                            <div class="payment-methods-box">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="COD" checked>
+                                    <img src="https://img.icons8.com/color/48/cash-in-hand.png" class="payment-icon" alt="COD">
+                                    <span class="payment-text">Cash on delivery (COD)</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="MOMO">
+                                    <img src="https://img.icons8.com/color/48/wallet--v1.png" class="payment-icon" alt="MoMo">
+                                    <span class="payment-text">Pay online via MoMo wallet</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="VNPAY">
+                                    <img src="https://img.icons8.com/color/48/bank-cards.png" class="payment-icon" alt="VNPay">
+                                    <span class="payment-text">Pay online via VNPay portal</span>
+                                </label>
+                            </div>
+
+                            <div class="form-group mt-5">
+                                <textarea name="description" rows="2" placeholder="Order notes (Example: Delivery during office hours)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="order-summary-card sticky-summary">
+                            <h4 class="section-head">Order Summary</h4>
+                            
+                            <div class="checkout-items-list" style="max-height: 380px; overflow-y: auto; padding-right: 5px;">
+                                <div th:each="item : ${cart.items}" class="checkout-item">
+                                    <img th:src="@{${item.productAvatar}}" alt="Product">
+                                    <div class="checkout-item-info">
+                                        <h6 th:text="${item.productName}">Product Name</h6>
+                                        <p class="variant"><span th:text="${item.color}">Color</span> / <span th:text="${item.size}">Size</span></p>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #000; font-weight: 800; font-size: 15px;" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' $'">0 $</span>
+                                            <span style="color: #777; font-size: 13px;">Qty: <span th:text="${item.quantity}">1</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="promo-box">
+                                <input type="text" placeholder="Enter promotional code">
+                                <button type="button">Apply</button>
+                            </div>
+
+                            <ul class="order-total-list">
+                                <li>Subtotal <span th:text="${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">140 $</span></li>
+                                <li>Shipping Fee <span>-</span></li>
+                                <li class="grand-total">Total <span th:text="${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' $'">140 $</span></li>
+                            </ul>
+
+                            <button type="submit" class="btn-order">PLACE ORDER NOW</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                        </div>
+                        <ul>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>E-mail:</b> hexashop@company.com</li>
+                            <li><b>Phone:</b> 010-020-0340</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        <li><a href="#">Men’s Shopping</a></li>
+                        <li><a href="#">Women’s Shopping</a></li>
+                        <li><a href="#">Kid's Shopping</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li><a th:href="@{/about}">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a th:href="@{/contact}">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="under-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+	<script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+</html>

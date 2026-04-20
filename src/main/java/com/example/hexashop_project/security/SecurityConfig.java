@@ -26,7 +26,7 @@ public class SecurityConfig {
             // PHÂN QUYỀN ĐƯỜNG DẪN (ROUTING)
             .authorizeHttpRequests(auth -> auth
                 // Các đường dẫn cho phép TẤT CẢ mọi người vào (kể cả khách vãng lai)
-                .requestMatchers("/", "/index", "/assets/**", "/UploadFiles/**" , "/login", "/register").permitAll()
+                .requestMatchers("/", "/index", "/assets/**", "/UploadFiles/**" , "/login", "/register", "/about", "/contact").permitAll()
                 .requestMatchers("/men/**", "/women/**", "/kids/**", "/single-product/**").permitAll()
                 .requestMatchers("/cart", "/api/cart/**").permitAll() // Mở giỏ hàng cho khách vãng lai
                 
