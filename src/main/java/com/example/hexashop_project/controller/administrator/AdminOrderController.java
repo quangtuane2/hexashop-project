@@ -34,7 +34,7 @@ public class AdminOrderController {
         model.addAttribute("orders", orders);
         
         // Trả về file HTML nằm ở thư mục templates/admin/order-list.html
-        return "admin/orders/order-list"; 
+        return "administrator/orders/order-list";
     }
     
     // Trang xem chi tiết đơn hàng
@@ -44,7 +44,7 @@ public class AdminOrderController {
         if (order == null) return "redirect:/admin/orders/order-list";
 
         model.addAttribute("order", order);
-        return "admin/orders/order-detail";
+        return "administrator/orders/order-detail";
     }
 
     // Xử lý cập nhật trạng thái đơn hàng

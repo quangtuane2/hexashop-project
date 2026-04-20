@@ -1,6 +1,5 @@
 package com.example.hexashop_project.security;
 
-import com.example.hexashop_project.model.Role;
 import com.example.hexashop_project.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +21,8 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
-    // DỊCH QUYỀN (ROLES): Chuyển Set<Role> thành Collection<GrantedAuthority> của Security
+    // DỊCH QUYỀN (ROLES): Chuyển Set<Role> thành Collection<GrantedAuthority> của
+    // Security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getRoles().stream()
@@ -41,16 +41,25 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername();
     }
 
-    // CÁC TRẠNG THÁI TÀI KHOẢN (Mặc định cứ để true là tài khoản hoạt động bình thường)
+    // CÁC TRẠNG THÁI TÀI KHOẢN (Mặc định cứ để true là tài khoản hoạt động bình
+    // thường)
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return user.getStatus() != null ? user.getStatus() : true; }
+    public boolean isAccountNonLocked() {
+        return user.getStatus() != null ? user.getStatus() : true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return user.getStatus() != null ? user.getStatus() : true; }
+    public boolean isEnabled() {
+        return user.getStatus() != null ? user.getStatus() : true;
+    }
 }
