@@ -143,7 +143,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                             Earnings (Monthly)</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${'$' + #numbers.formatDecimal(earnings, 0, 'COMMA', 2, 'POINT')}">$40,000</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-calendar stats-icon text-primary"></i>
@@ -160,7 +160,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                             Annual Orders</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">215</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${annualOrders}">215</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign stats-icon text-success"></i>
@@ -176,7 +176,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Visitors</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5,000</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalUsers}">5,000</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-user stats-icon text-info"></i>
@@ -192,7 +192,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${pendingRequests}">18</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-comments stats-icon text-warning"></i>
@@ -221,37 +221,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>#51421</td>
-                                    <td>Justin Bieber</td>
-                                    <td>Classic Spring Jacket</td>
-                                    <td>$120.00</td>
-                                    <td><span class="badge bg-warning">Pending</span></td>
-                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
+                                <tr th:each="order : ${recentOrders}">
+                                    <td th:text="${order.code}">#51421</td>
+                                    <td th:text="${order.customerName}">Justin Bieber</td>
+                                    <td th:text="${order.saleOrderProducts.size() + ' Items'}">Classic Spring Jacket</td>
+                                    <td th:text="${'$' + #numbers.formatDecimal(order.total, 0, 'COMMA', 2, 'POINT')}">$120.00</td>
+                                    <td>
+                                        <span th:class="${'badge bg-' + (order.orderStatus.name == 'Pending' ? 'warning' : (order.orderStatus.name == 'Completed' ? 'success' : 'danger'))}" 
+                                              th:text="${order.orderStatus.name}">Pending</span>
+                                    </td>
+                                    <td><a th:href="@{'/admin/orders'}" class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></a></td>
                                 </tr>
-                                <tr>
-                                    <td>#51422</td>
-                                    <td>Taylor Swift</td>
-                                    <td>Women's Dress</td>
-                                    <td>$80.00</td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#51423</td>
-                                    <td>Ed Sheeran</td>
-                                    <td>Kid's T-Shirt</td>
-                                    <td>$40.00</td>
-                                    <td><span class="badge bg-danger">Cancelled</span></td>
-                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#51424</td>
-                                    <td>Ariana Grande</td>
-                                    <td>Luxury Bag</td>
-                                    <td>$200.00</td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td><button class="btn btn-sm btn-info text-white"><i class="fa fa-eye"></i></button></td>
+                                <tr th:if="${#lists.isEmpty(recentOrders)}">
+                                    <td colspan="6" class="text-center">No recent orders found.</td>
                                 </tr>
                             </tbody>
                         </table>
