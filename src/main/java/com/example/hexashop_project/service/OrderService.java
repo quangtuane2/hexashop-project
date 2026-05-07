@@ -38,10 +38,8 @@ public class OrderService {
     private EmailService emailService; // Gửi email xác nhận đơn hàng
 
     @Transactional // Đảm bảo nếu một bước lỗi thì toàn bộ sẽ được rollback (không lưu gì hết)
-    public SaleOrder placeOrder(SaleOrder orderData, HttpSession session) {
-        // Lấy giỏ hàng hiện tại
-        Cart cart = cartService.getCart(session);
-        if (cart.getItems().isEmpty()) {
+    public SaleOrder placeOrder(SaleOrder orderData, Cart cart, HttpSession session, boolean isBuyNow) {
+        if (cart == null || cart.getItems().isEmpty()) {
             throw new RuntimeException("Giỏ hàng đang trống!");
         }
 
@@ -90,7 +88,11 @@ public class OrderService {
         emailService.sendOrderConfirmation(savedOrder);
 
         // Xóa giỏ hàng sau khi đặt thành công
-        clearCart(session, cart);
+        if (isBuyNow) {
+            session.removeAttribute("buyNowCart");
+        } else {
+            clearCart(session, cart);
+        }
 
         return savedOrder;
     }

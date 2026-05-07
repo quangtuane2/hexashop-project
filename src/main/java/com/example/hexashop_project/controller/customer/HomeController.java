@@ -328,22 +328,37 @@ public class HomeController {
 
 
     @GetMapping("/checkout")
-    public String checkout(HttpSession session, Model model) {
-        Cart cart = cartService.getCart(session);
+    public String checkout(@RequestParam(value = "buyNow", required = false, defaultValue = "false") boolean buyNow, HttpSession session, Model model) {
+        Cart cart;
+        if (buyNow) {
+            cart = (Cart) session.getAttribute("buyNowCart");
+            if (cart == null) return "redirect:/"; // Nếu chưa chọn mua ngay mà cố vào link
+        } else {
+            cart = cartService.getCart(session);
+        }
         
         // Nếu giỏ hàng trống thì không cho thanh toán, quay lại giỏ
-        if (cart.getItems().isEmpty()) {
+        if (cart == null || cart.getItems().isEmpty()) {
             return "redirect:/cart";
         }
         
         model.addAttribute("cart", cart);
+        model.addAttribute("isBuyNow", buyNow); // Đẩy xuống Thymeleaf
         return "customer/checkout";
     }
     
     @PostMapping("/checkout")
-    public String processCheckout(@ModelAttribute SaleOrder orderData, @RequestParam(value = "paymentMethod", defaultValue = "COD") String paymentMethod, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String processCheckout(@ModelAttribute SaleOrder orderData, 
+                                  @RequestParam(value = "paymentMethod", defaultValue = "COD") String paymentMethod, 
+                                  @RequestParam(value = "isBuyNow", defaultValue = "false") boolean isBuyNow,
+                                  HttpSession session, RedirectAttributes redirectAttributes) {
         try {
-            SaleOrder successOrder = orderService.placeOrder(orderData, session);
+            Cart cartToCheckout = isBuyNow ? (Cart) session.getAttribute("buyNowCart") : cartService.getCart(session);
+            if (cartToCheckout == null || cartToCheckout.getItems().isEmpty()) {
+                throw new RuntimeException("Đơn hàng rỗng hoặc phiên giao dịch đã hết hạn.");
+            }
+
+            SaleOrder successOrder = orderService.placeOrder(orderData, cartToCheckout, session, isBuyNow);
             
             // Nếu khách chọn thanh toán online (MOMO, VNPAY, BANK) -> chuyển sang trang hiển thị QR
             if (!"COD".equalsIgnoreCase(paymentMethod)) {

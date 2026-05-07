@@ -102,4 +102,36 @@ public class CartController {
         response.put("cartQuantity", cart.getTotalQuantity());
         return ResponseEntity.ok(response);
     }
+
+    // API MUA NGAY (BUY NOW)
+    @PostMapping("/buy-now")
+    public ResponseEntity<?> buyNow(@RequestBody AddToCartRequest request, HttpSession session) {
+        Product product = productService.findById(request.getProductId());
+        if (product == null) {
+            return ResponseEntity.badRequest().body("Sản phẩm không tồn tại!");
+        }
+
+        CartItem item = new CartItem();
+        item.setProductId(product.getId());
+        item.setProductName(product.getName());
+        item.setProductAvatar(product.getAvatar());
+
+        Double finalPrice = (product.getSalePrice() != null && product.getSalePrice().compareTo(BigDecimal.ZERO) > 0)
+                ? product.getSalePrice().doubleValue()
+                : product.getPrice().doubleValue();
+
+        item.setPrice(finalPrice);
+        item.setColor(request.getColor());
+        item.setSize(request.getSize());
+        item.setQuantity(request.getQuantity());
+
+        Cart buyNowCart = new Cart();
+        buyNowCart.getItems().add(item);
+        
+        session.setAttribute("buyNowCart", buyNowCart);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        return ResponseEntity.ok(response);
+    }
 }

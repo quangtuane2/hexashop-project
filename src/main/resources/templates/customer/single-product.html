@@ -423,6 +423,50 @@
 	                alert("Lỗi kết nối đến máy chủ!");
 	            });
 	        });
+	        // HÀM XỬ LÝ KHI BẤM NÚT "MUA NGAY"
+	        btnBuyNow.addEventListener('click', function(e) {
+	            e.preventDefault();
+
+	            if (!selectedColor || !selectedSize) {
+	                alert("Vui lòng chọn Màu sắc và Kích thước trước khi mua!");
+	                return;
+	            }
+
+	            const productId = document.getElementById('currentProductId').value;
+	            const quantity = document.getElementById('qtyInput').value;
+
+	            const originalText = btnBuyNow.innerText;
+	            btnBuyNow.innerText = "Đang xử lý...";
+	            btnBuyNow.disabled = true;
+
+	            fetch('/api/cart/buy-now', {
+	                method: 'POST',
+	                headers: { 'Content-Type': 'application/json' },
+	                body: JSON.stringify({
+	                    productId: parseInt(productId),
+	                    color: selectedColor,
+	                    size: selectedSize,
+	                    quantity: parseInt(quantity)
+	                })
+	            })
+	            .then(response => response.json())
+	            .then(data => {
+	                if (data.status === "success") {
+	                    // Chuyển hướng sang checkout với cờ buyNow=true
+	                    window.location.href = '/checkout?buyNow=true';
+	                } else {
+	                    alert("Có lỗi xảy ra: " + data);
+	                    btnBuyNow.innerText = originalText;
+	                    btnBuyNow.disabled = false;
+	                }
+	            })
+	            .catch(error => {
+	                console.error('Error:', error);
+	                alert("Lỗi kết nối đến máy chủ!");
+	                btnBuyNow.innerText = originalText;
+	                btnBuyNow.disabled = false;
+	            });
+	        });
 	    });  
 	</script>
     <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
