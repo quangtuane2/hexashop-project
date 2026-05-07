@@ -341,9 +341,14 @@ public class HomeController {
     }
     
     @PostMapping("/checkout")
-    public String processCheckout(@ModelAttribute SaleOrder orderData, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String processCheckout(@ModelAttribute SaleOrder orderData, @RequestParam(value = "paymentMethod", defaultValue = "COD") String paymentMethod, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
             SaleOrder successOrder = orderService.placeOrder(orderData, session);
+            
+            // Nếu khách chọn thanh toán online (MOMO, VNPAY, BANK) -> chuyển sang trang hiển thị QR
+            if (!"COD".equalsIgnoreCase(paymentMethod)) {
+                return "redirect:/payment-qrcode?orderCode=" + successOrder.getCode();
+            }
             
             redirectAttributes.addFlashAttribute("order", successOrder);
             redirectAttributes.addFlashAttribute("successMsg", "Congratulations! Your order has been placed successfully.");
@@ -353,6 +358,19 @@ public class HomeController {
             redirectAttributes.addFlashAttribute("errorMsg", "Lỗi đặt hàng: " + e.getMessage());
             return "redirect:/checkout";
         }
+    }
+
+    @GetMapping("/payment-qrcode")
+    public String paymentQrCode(@RequestParam("orderCode") String orderCode, Model model) {
+        SaleOrder order = saleOrderRepository.findByCode(orderCode);
+        if (order == null) {
+            return "redirect:/order-tracking";
+        }
+        
+        // Pass order details to the view
+        model.addAttribute("order", order);
+        
+        return "customer/payment-qrcode";
     }
 
 }

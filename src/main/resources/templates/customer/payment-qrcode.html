@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Hexashop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <style>
+        .payment-page {
+            padding: 60px 0 100px 0;
+            background-color: #f2f3f5;
+            min-height: 80vh;
+        }
+
+        .payment-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-head {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #222;
+            text-align: center;
+        }
+
+        .qr-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .qr-info {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .qr-image-container {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 12px;
+            border: 2px dashed #ddd;
+        }
+
+        .qr-image-container img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+        }
+
+        .info-row .label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-row .value {
+            color: #111;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .highlight-value {
+            color: #e74c3c !important;
+            font-size: 18px;
+        }
+
+        .btn-confirm {
+            display: block;
+            width: 100%;
+            height: 55px;
+            background-color: #000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 35px;
+            text-align: center;
+            line-height: 55px;
+            text-decoration: none;
+        }
+
+        .btn-confirm:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .instruction-text {
+            text-align: center;
+            color: #555;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .instruction-text strong {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a th:href="@{/}" class="logo"><img th:src="@{/assets/images/logo.png}" alt="Hexashop"></a>
+                        <ul class="nav">
+                            <li><a th:href="@{/}">Home</a></li>
+                            <li><a th:href="@{/men}">Men's</a></li>
+                            <li><a th:href="@{/women}">Women's</a></li>
+                            <li><a th:href="@{/kids}">Kid's</a></li>
+
+                            <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
+                            <li sec:authorize="isAnonymous()"><a th:href="@{/register}">Register</a></li>
+
+                            <li sec:authorize="isAuthenticated()"
+                                style="position:relative; display: flex; align-items: center;" class="user-dropdown">
+                                <a href="javascript:void(0)"
+                                    style="display:flex;align-items:center;gap:6px; padding-bottom:10px; margin-bottom:-10px;">
+                                    <img th:if="${#authentication.principal.user.avatar != null and !#strings.isEmpty(#authentication.principal.user.avatar)}"
+                                        th:src="${#authentication.principal.user.avatar}"
+                                        style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
+
+                                    <i th:unless="${#authentication.principal.user.avatar != null and !#strings.isEmpty(#authentication.principal.user.avatar)}"
+                                        class="fa fa-user-circle" style="font-size:32px;"></i>
+
+                                    <i class="fa fa-caret-down" style="font-size:12px;"></i>
+                                </a>
+                                <ul class="dropdown-nav" style="margin-top: 15px;">
+                                    <li
+                                        style="padding: 10px 20px; border-bottom: 1px solid #eee; text-align: left; background: #fafafa; cursor: default;">
+                                        <div
+                                            style="font-size: 12px; color: #888; font-weight: normal; line-height: normal; margin-bottom: 2px;">
+                                            Xin chào,</div>
+                                        <strong th:text="${#authentication.principal.user.fullName}"
+                                            style="color: #333; font-size: 15px; display: block; line-height: normal;">User
+                                            Name</strong>
+                                    </li>
+                                    <li><a th:href="@{/order-tracking}" style="height: auto; line-height: normal;"><i
+                                                class="fa fa-box me-1"></i> Đơn hàng</a></li>
+                                    <li>
+                                        <form th:action="@{/logout}" method="post" style="margin:0;">
+                                            <button type="submit" class="logout-btn"
+                                                style="height: auto; line-height: normal; outline:none; box-shadow:none; padding: 8px 20px; background: none; border: none; cursor: pointer; width: 100%; text-align: left; color: #333; font-size: 14px; font-weight: 500;">
+                                                <i class="fa fa-sign-out-alt me-1"></i> Đăng xuất
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="payment-page">
+        <div class="container">
+            <div class="payment-card">
+                <h4 class="section-head">PAY FOR ORDER</h4>
+
+                <div class="qr-section">
+                    <!-- Cột thông tin -->
+                    <div class="qr-info">
+                        <div class="info-row">
+                            <span class="label">Mã đơn hàng:</span>
+                            <span class="value" th:text="${order.code}">ORD-12345</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Người nhận:</span>
+                            <span class="value" th:text="${order.customerName}">Nguyễn Văn A</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Ngân hàng hưởng:</span>
+                            <span class="value">MBBank (Ngân hàng Quân Đội)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Chủ tài khoản:</span>
+                            <span class="value">HEXASHOP CO LTD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Số tài khoản:</span>
+                            <span class="value highlight-value">0976781028</span>
+                        </div>
+                        <div class="info-row" style="border-bottom: none;">
+                            <span class="label">Tổng tiền thanh toán:</span>
+                            <span class="value highlight-value"
+                                th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' $'">100
+                                $</span>
+                        </div>
+                    </div>
+
+                    <!-- Cột hình ảnh QR -->
+                    <div class="qr-image-container">
+                        <p style="font-weight: 600; color: #333; margin-bottom: 15px;">Quét mã QR để thanh toán</p>
+                        <!-- Sử dụng API VietQR để tự động tạo mã QR có chứa số tiền và lời nhắn -->
+                        <!-- Bank ID: MB, Account: 0123456789, Amount: order.total, AddInfo: order.code -->
+                        <img th:src="@{'https://img.vietqr.io/image/MB-0976781028-compact2.png?amount=' + ${#numbers.formatDecimal(order.total, 0, 'NONE', 0, 'POINT')} + '&addInfo=' + ${order.code} + '&accountName=HEXASHOP CO LTD'}"
+                            alt="QR Code Thanh Toán">
+                        <p class="instruction-text">Sử dụng <strong>App Ngân hàng</strong> hoặc
+                            <strong>MoMo/VNPay</strong> có hỗ trợ quét mã VietQR để thanh toán nhanh.
+                        </p>
+                    </div>
+                </div>
+
+                <p class="instruction-text" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                    Vui lòng kiểm tra kỹ <strong>Mã đơn hàng</strong> trong phần nội dung chuyển khoản để hệ thống duyệt
+                    tự động.<br>
+                    Sau khi chuyển khoản thành công, vui lòng bấm nút bên dưới để quay lại xem trạng thái đơn.
+                </p>
+
+                <a th:href="@{/order-tracking}" class="btn-confirm">Tôi đã thanh toán, chuyển đến Theo dõi đơn hàng</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <p style="text-align: center; color: #fff; padding: 30px 0;">Copyright © 2022 HexaShop Co., Ltd. All
+                        Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+    <script th:src="@{/assets/js/script.js}"></script>
+</body>
+
+</html>
