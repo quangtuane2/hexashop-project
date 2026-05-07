@@ -52,7 +52,15 @@ public class HomeController {
     // Ánh xạ URL trang chủ (http://localhost:9090/ hoặc
     // http://localhost:9090/index)
     @GetMapping({ "/", "/index" })
-    public String index() {
+    public String index(Model model) {
+        List<Product> menLatest = productService.getProductsByCategory(1, org.springframework.data.domain.PageRequest.of(0, 8, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "id"))).getContent();
+        List<Product> womenLatest = productService.getProductsByCategory(2, org.springframework.data.domain.PageRequest.of(0, 8, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "id"))).getContent();
+        List<Product> kidLatest = productService.getProductsByCategory(3, org.springframework.data.domain.PageRequest.of(0, 8, org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "id"))).getContent();
+
+        model.addAttribute("menLatest", menLatest);
+        model.addAttribute("womenLatest", womenLatest);
+        model.addAttribute("kidLatest", kidLatest);
+        
         // Trỏ tới file: src/main/resources/templates/customer/index.html
         return "customer/index";
     }
