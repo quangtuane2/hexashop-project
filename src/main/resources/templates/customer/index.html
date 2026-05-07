@@ -70,8 +70,9 @@
                                 </ul>
                             </li>
                             <li class="cart-item">
-                                <a th:href="@{/cart}">
-                                    <i class="fa fa-shopping-cart"></i> Cart (0)
+                                <a th:href="@{/cart}" class="active">
+                                    <i class="fa fa-shopping-cart"></i> Cart (<span
+                                        th:text="${cart.totalQuantity}">0</span>)
                                 </a>
                             </li>
                         </ul>

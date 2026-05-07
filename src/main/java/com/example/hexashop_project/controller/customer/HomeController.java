@@ -49,6 +49,11 @@ public class HomeController {
     @Autowired
     private com.example.hexashop_project.repository.SaleOrderRepository saleOrderRepository;
 
+    @ModelAttribute("cart")
+    public Cart populateCart(HttpSession session) {
+        return cartService.getCart(session);
+    }
+
     // Ánh xạ URL trang chủ (http://localhost:9090/ hoặc
     // http://localhost:9090/index)
     @GetMapping({ "/", "/index" })
@@ -239,11 +244,6 @@ public class HomeController {
 
     @GetMapping("/cart")
     public String cart(HttpSession session, Model model) {
-        // CartService lấy cái giỏ hàng hiện tại trong Session ra
-        Cart cart = cartService.getCart(session);
-        
-        model.addAttribute("cart", cart);
-        
         return "customer/cart";
     }
 
