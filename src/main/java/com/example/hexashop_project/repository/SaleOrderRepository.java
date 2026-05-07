@@ -11,5 +11,8 @@ public interface SaleOrderRepository extends JpaRepository<SaleOrder, Integer> {
 
     // Tìm đơn hàng của khách theo email
     List<SaleOrder> findByCustomerEmailOrderByCreateDateDesc(String email);
+
+    // Xác thực: tìm đơn hàng theo email + mã đơn (dùng cho khách vãng lai tra cứu)
+    SaleOrder findByCustomerEmailAndCode(String customerEmail, String code);
 }
 

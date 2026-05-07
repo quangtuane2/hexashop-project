@@ -1,14 +1,20 @@
 package com.example.hexashop_project.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.hexashop_project.dto.UserRegisterDTO;
+import com.example.hexashop_project.model.EmailVerificationToken;
 import com.example.hexashop_project.model.Role;
 import com.example.hexashop_project.model.User;
+import com.example.hexashop_project.repository.EmailVerificationTokenRepository;
 import com.example.hexashop_project.repository.RoleRepository;
 import com.example.hexashop_project.repository.UserRepository;
 
@@ -19,13 +25,20 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; // Công cụ mã hóa mật khẩu
-    
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailVerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    // ĐĂNG KÝ — Tạo user + Gửi email xác minh
     @Transactional
     public String registerUser(UserRegisterDTO dto) {
         // Kiểm tra Email/Username đã tồn tại chưa
@@ -40,62 +53,96 @@ public class UserService {
 
         // Tạo User mới
         User user = new User();
-        user.setUsername(dto.getEmail()); // Lấy email làm username luôn cho tiện
+        user.setUsername(dto.getEmail()); // Email làm username
         user.setEmail(dto.getEmail());
-        
-        // Tách Họ và Tên từ fullName (Vd: "Nguyen Van A")
+
+        // Tách Họ và Tên từ fullName
         String[] names = dto.getFullName().split(" ", 2);
         if (names.length > 1) {
-            user.setFirstname(names[0]); // Nguyen
-            user.setLastname(names[1]);  // Van A
+            user.setFirstname(names[0]);
+            user.setLastname(names[1]);
         } else {
             user.setFirstname(dto.getFullName());
         }
 
-        // MÃ HÓA MẬT KHẨU TRƯỚC KHI LƯU DB
+        // Mã hóa mật khẩu
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setStatus(true); // Kích hoạt tài khoản
 
-        // Cấp quyền mặc định là Khách hàng (ROLE_USER)
+        // ★ STATUS = FALSE — chờ xác minh email
+        user.setStatus(false);
+        user.setCreateDate(new Date());
+
+        // Cấp quyền ROLE_USER
         Role userRole = roleRepository.findByName("ROLE_USER");
         if (userRole == null) {
-            // Nếu DB chưa có quyền ROLE_USER thì tự động tạo luôn (Tránh lỗi)
             userRole = new Role();
             userRole.setName("ROLE_USER");
             userRole = roleRepository.save(userRole);
         }
         user.getRoles().add(userRole);
 
-        // Lưu vào Database
+        // Lưu user vào DB
         userRepository.save(user);
+
+        // ★ Tạo token xác minh (UUID, hết hạn sau 24h)
+        String tokenValue = UUID.randomUUID().toString();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR_OF_DAY, 24);
+        EmailVerificationToken evToken = new EmailVerificationToken(tokenValue, user, cal.getTime());
+        tokenRepository.save(evToken);
+
+        // ★ Gửi email xác minh
+        emailService.sendVerificationEmail(user, tokenValue);
+
         return "SUCCESS";
     }
 
-    // Lấy tất cả người dùng
+    // XÁC MINH EMAIL — User click link trong email
+    @Transactional
+    public String verifyEmail(String tokenValue) {
+        EmailVerificationToken token = tokenRepository.findByToken(tokenValue);
+
+        if (token == null) {
+            return "INVALID"; // Token không tồn tại
+        }
+        if (token.getUsed()) {
+            return "USED"; // Token đã được dùng rồi
+        }
+        if (token.isExpired()) {
+            return "EXPIRED"; // Token hết hạn
+        }
+
+        // Kích hoạt tài khoản
+        User user = token.getUser();
+        user.setStatus(true); // ★ Mở khóa tài khoản
+        user.setUpdateDate(new Date());
+        userRepository.save(user);
+
+        // Đánh dấu token đã dùng
+        token.setUsed(true);
+        tokenRepository.save(token);
+
+        return "SUCCESS";
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    // Lấy người dùng theo ID
     public User getById(Integer id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
 
-    // Lưu hoặc cập nhật người dùng (Đăng ký)
     public User saveOrUpdate(User user) {
         return userRepository.save(user);
     }
 
-    // Xóa người dùng theo ID
     public void deleteById(Integer id) {
         userRepository.deleteById(id);
     }
-    
-    // Tìm User bằng username (Dùng cho Đăng nhập)
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-    
-    
 }

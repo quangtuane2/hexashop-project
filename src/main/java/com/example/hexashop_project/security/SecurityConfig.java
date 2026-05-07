@@ -28,7 +28,9 @@ public class SecurityConfig {
                 // Các đường dẫn cho phép TẤT CẢ mọi người vào (kể cả khách vãng lai)
                 .requestMatchers("/", "/index", "/assets/**", "/UploadFiles/**" , "/login", "/register", "/about", "/contact").permitAll()
                 .requestMatchers("/men/**", "/women/**", "/kids/**", "/single-product/**").permitAll()
-                .requestMatchers("/cart", "/api/cart/**").permitAll() // Mở giỏ hàng cho khách vãng lai
+                .requestMatchers("/cart", "/api/cart/**").permitAll()
+                // Các link công khai liên quan đến email
+                .requestMatchers("/verify-email", "/register-success").permitAll()
                 
                 // Các đường dẫn bắt buộc phải có quyền ADMIN mới được vào
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")

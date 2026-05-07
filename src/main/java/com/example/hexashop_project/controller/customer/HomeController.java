@@ -273,9 +273,9 @@ public class HomeController {
     	String result = userService.registerUser(dto);
         
         if ("SUCCESS".equals(result)) {
-            // Nếu thành công, chuyển hướng về trang đăng nhập và báo thành công
-            redirectAttributes.addFlashAttribute("successMsg", "Đăng ký thành công! Vui lòng đăng nhập.");
-            return "redirect:/login";
+            // Đăng ký thành công → chuyển về trang thông báo "Kiểm tra email"
+            redirectAttributes.addFlashAttribute("registeredEmail", dto.getEmail());
+            return "redirect:/register-success";
         } else {
             // Nếu lỗi (trùng email, sai pass), ở lại trang đăng ký và báo lỗi
             model.addAttribute("errorMsg", result);
@@ -283,18 +283,50 @@ public class HomeController {
         }
     }
 
+    // TRANG THÔNG BÁO SAU ĐĂNG KÝ
+    @GetMapping("/register-success")
+    public String registerSuccess() {
+        return "customer/register-success";
+    }
+
+    // XÁC MINH EMAIL — User click link trong email
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam String token, RedirectAttributes redirectAttributes) {
+        String result = userService.verifyEmail(token);
+        switch (result) {
+            case "SUCCESS":
+                redirectAttributes.addFlashAttribute("successMsg",
+                    "🎉 Email xác minh thành công! Tài khoản của bạn đã được kích hoạt. Vui lòng đăng nhập.");
+                break;
+            case "USED":
+                redirectAttributes.addFlashAttribute("errorMsg",
+                    "Link xác minh này đã được sử dụng rồi.");
+                break;
+            case "EXPIRED":
+                redirectAttributes.addFlashAttribute("errorMsg",
+                    "Link xác minh đã hết hạn. Vui lòng đăng ký lại.");
+                break;
+            default:
+                redirectAttributes.addFlashAttribute("errorMsg",
+                    "Link xác minh không hợp lệ.");
+        }
+        return "redirect:/login";
+    }
+
     @GetMapping("/order-tracking")
     public String orderTracking(Model model, java.security.Principal principal) {
         if (principal != null) {
+            // User đã đăng nhập: tự động load toàn bộ đơn hàng theo email tài khoản
             String email = principal.getName();
             List<SaleOrder> orders = saleOrderRepository.findByCustomerEmailOrderByCreateDateDesc(email);
-            if (orders != null && !orders.isEmpty()) {
-                model.addAttribute("order", orders.get(0));
-            }
+            model.addAttribute("orders", orders);
+            model.addAttribute("searchEmail", email);
         }
         return "customer/order-tracking";
     }
-    
+
+
+
     @GetMapping("/checkout")
     public String checkout(HttpSession session, Model model) {
         Cart cart = cartService.getCart(session);

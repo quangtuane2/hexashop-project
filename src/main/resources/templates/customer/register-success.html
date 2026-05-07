@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm tra Email - HexaShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <style>
+        body { background: #f5f6fa; }
+        .verify-wrap {
+            max-width: 520px; margin: 80px auto; padding: 20px;
+            text-align: center;
+        }
+        .verify-card {
+            background: #fff; border-radius: 20px;
+            padding: 50px 44px;
+            box-shadow: 0 8px 40px rgba(0,0,0,.10);
+        }
+        .email-icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, #ff5e00, #ff8c42);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px; font-size: 34px; color: #fff;
+        }
+        .verify-card h2 {
+            font-size: 24px; font-weight: 800;
+            color: #1a1a2e; margin: 0 0 12px;
+        }
+        .verify-card p {
+            color: #6c757d; font-size: 15px;
+            line-height: 1.7; margin: 0 0 10px;
+        }
+        .email-highlight {
+            display: inline-block;
+            background: #fff8f5; border: 1px solid #ffd4b8;
+            color: #ff5e00; font-weight: 700;
+            padding: 6px 16px; border-radius: 20px;
+            font-size: 14px; margin: 8px 0 20px;
+        }
+        .steps {
+            background: #f8f9fb; border-radius: 12px;
+            padding: 20px 24px; text-align: left; margin: 24px 0;
+        }
+        .steps h4 {
+            font-size: 13px; font-weight: 700; color: #9aa0b0;
+            text-transform: uppercase; letter-spacing: .5px; margin: 0 0 14px;
+        }
+        .step-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            margin-bottom: 12px; font-size: 14px; color: #555;
+        }
+        .step-num {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #ff5e00; color: #fff;
+            font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin-top: 1px;
+        }
+        .btn-login {
+            display: inline-block; width: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #2d2d50);
+            color: #fff; text-decoration: none;
+            padding: 14px; border-radius: 10px;
+            font-size: 15px; font-weight: 700;
+            transition: background .2s; margin-top: 8px;
+        }
+        .btn-login:hover { background: linear-gradient(135deg, #ff5e00, #e05200); color: #fff; }
+        .note { font-size: 12px; color: #aaa; margin-top: 16px; }
+    </style>
+</head>
+<body>
+<div class="verify-wrap">
+    <a th:href="@{/}" style="display:inline-block; margin-bottom: 30px;">
+        <img th:src="@{/assets/images/logo.png}" alt="HexaShop" style="height:40px;">
+    </a>
+
+    <div class="verify-card">
+        <div class="email-icon"><i class="fa fa-envelope"></i></div>
+
+        <h2>Kiểm tra Email của bạn!</h2>
+        <p>Chúng tôi đã gửi link xác minh đến:</p>
+
+        <div class="email-highlight"
+             th:text="${registeredEmail != null ? registeredEmail : 'email của bạn'}">
+            email@example.com
+        </div>
+
+        <div class="steps">
+            <h4>Các bước tiếp theo</h4>
+            <div class="step-item">
+                <div class="step-num">1</div>
+                <span>Mở hộp thư đến email bạn vừa đăng ký</span>
+            </div>
+            <div class="step-item">
+                <div class="step-num">2</div>
+                <span>Tìm email từ <strong>HexaShop</strong> với tiêu đề <em>"Xác minh tài khoản"</em></span>
+            </div>
+            <div class="step-item">
+                <div class="step-num">3</div>
+                <span>Nhấn nút <strong>"Xác minh Email ngay"</strong> trong email</span>
+            </div>
+            <div class="step-item">
+                <div class="step-num">4</div>
+                <span>Quay lại đây và đăng nhập vào tài khoản</span>
+            </div>
+        </div>
+
+        <a th:href="@{/login}" class="btn-login">
+            <i class="fa fa-sign-in-alt"></i> Đến trang Đăng nhập
+        </a>
+
+        <p class="note">
+            ⏰ Link xác minh có hiệu lực trong <strong>24 giờ</strong>.<br>
+            Không thấy email? Kiểm tra thư mục <strong>Spam/Junk</strong>.
+        </p>
+    </div>
+</div>
+</body>
+</html>

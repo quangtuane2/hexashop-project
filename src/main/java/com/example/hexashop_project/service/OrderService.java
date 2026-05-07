@@ -34,6 +34,9 @@ public class OrderService {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private EmailService emailService; // Gửi email xác nhận đơn hàng
+
     @Transactional // Đảm bảo nếu một bước lỗi thì toàn bộ sẽ được rollback (không lưu gì hết)
     public SaleOrder placeOrder(SaleOrder orderData, HttpSession session) {
         // Lấy giỏ hàng hiện tại
@@ -82,6 +85,9 @@ public class OrderService {
 
         // Lưu đơn hàng (Cascading sẽ tự lưu luôn SaleOrderProduct)
         SaleOrder savedOrder = saleOrderRepository.save(orderData);
+
+        // Gửi email xác nhận đơn hàng cho khách
+        emailService.sendOrderConfirmation(savedOrder);
 
         // Xóa giỏ hàng sau khi đặt thành công
         clearCart(session, cart);

@@ -1,23 +1,357 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-              xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Order - Hexashop</title>
+    <title>Đơn Hàng Của Tôi - HexaShop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <style>
+        .page-wrap {
+            background: #f5f6fa;
+            padding: 50px 0;
+            min-height: 60vh;
+        }
+
+        /* Alert */
+        .msg-ok {
+            background: #f0fff4;
+            border: 1px solid #b7ebc9;
+            color: #155724;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .msg-err {
+            background: #fff5f5;
+            border: 1px solid #f5c2c7;
+            color: #c0392b;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        /* Header bar */
+        .page-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin: 0 0 6px;
+        }
+
+        .page-sub {
+            color: #9aa0b0;
+            font-size: 14px;
+            margin: 0 0 28px;
+        }
+
+        /* Orders bar */
+        .orders-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .orders-bar h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        .count-badge {
+            background: #ff5e00;
+            color: #fff;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Order card */
+        .o-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, .07);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: box-shadow .25s;
+        }
+
+        .o-card:hover {
+            box-shadow: 0 4px 22px rgba(0, 0, 0, .12);
+        }
+
+        .o-head {
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .o-head-left .o-code {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1a1a2e;
+            display: block;
+        }
+
+        .o-head-left .o-date {
+            font-size: 12px;
+            color: #9aa0b0;
+        }
+
+        .o-head-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .o-total {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ff5e00;
+        }
+
+        /* Status badge - dùng inline style thay vì th:classappend */
+        .s-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .chevron {
+            color: #b0b8c8;
+            transition: transform .3s;
+        }
+
+        .o-card.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Body */
+        .o-body {
+            display: none;
+            padding: 0 24px 24px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        .o-card.open .o-body {
+            display: block;
+            animation: fadeIn .2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            padding-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-box label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #9aa0b0;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 4px;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #1a1a2e;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Table */
+        .prod-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            margin: 16px 0;
+        }
+
+        .prod-table th {
+            background: #f8f9fb;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            color: #9aa0b0;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            border-bottom: 2px solid #eef0f4;
+        }
+
+        .prod-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f3f4f7;
+            color: #333;
+        }
+
+        .prod-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Actions */
+        .o-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-top: 16px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        .btn-cancel {
+            border: 2px solid #dc3545;
+            background: #fff;
+            color: #dc3545;
+            padding: 9px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-cancel:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-shop {
+            background: #1a1a2e;
+            color: #fff;
+            text-decoration: none;
+            padding: 9px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background .2s;
+        }
+
+        .btn-shop:hover {
+            background: #ff5e00;
+            color: #fff;
+        }
+
+        /* Empty */
+        .empty-box {
+            text-align: center;
+            padding: 60px 20px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, .07);
+        }
+
+        .empty-box i {
+            font-size: 60px;
+            color: #dee2e6;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .empty-box h4 {
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .empty-box p {
+            color: #9aa0b0;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .empty-box a {
+            color: #ff5e00;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* Toast */
+        .toast-fixed {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .18);
+            animation: slideUp .3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        @media(max-width:768px) {
+            .o-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
+    <!-- HEADER -->
     <header class="header-area">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <nav class="main-nav">
                         <a th:href="@{/}" class="logo">
-                            <img th:src="@{/assets/images/logo.png}" alt="Hexashop">
+                            <img th:src="@{/assets/images/logo.png}" alt="HexaShop">
                         </a>
                         <ul class="nav">
                             <li><a th:href="@{/}">Home</a></li>
@@ -25,40 +359,46 @@
                             <li><a th:href="@{/women}">Women's</a></li>
                             <li><a th:href="@{/kids}">Kid's</a></li>
                             <li><a th:href="@{/contact}">Contact Us</a></li>
-                            
-                            <!-- Chưa đăng nhập: hiện Login và Register -->
+
                             <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
                             <li sec:authorize="isAnonymous()"><a th:href="@{/register}">Register</a></li>
 
-                            <!-- Đã đăng nhập: hiện thông tin user + dropdown -->
-                            <li sec:authorize="isAuthenticated()" style="position:relative; display: flex; align-items: center;" class="user-dropdown">
-                                <a href="javascript:void(0)" style="display:flex;align-items:center;gap:6px; padding-bottom:10px; margin-bottom:-10px;">
-                                    <img th:if="${#authentication.principal.user.avatar != null and !#strings.isEmpty(#authentication.principal.user.avatar)}"
-                                         th:src="${#authentication.principal.user.avatar}" 
-                                         style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
-                                    
-                                    <i th:unless="${#authentication.principal.user.avatar != null and !#strings.isEmpty(#authentication.principal.user.avatar)}"
-                                       class="fa fa-user-circle" style="font-size:32px;"></i>
-                                    
+                            <li sec:authorize="isAuthenticated()"
+                                style="position:relative;display:flex;align-items:center;" class="user-dropdown">
+                                <a href="javascript:void(0)"
+                                    style="display:flex;align-items:center;gap:6px;padding-bottom:10px;margin-bottom:-10px;">
+                                    <img sec:authorize="isAuthenticated()"
+                                        th:if="${#authentication.principal.user.avatar != null and !#strings.isEmpty(#authentication.principal.user.avatar)}"
+                                        th:src="${#authentication.principal.user.avatar}"
+                                        style="width:38px;height:38px;border-radius:50%;object-fit:cover;">
+                                    <i sec:authorize="isAuthenticated()"
+                                        th:unless="${#authentication.principal.user.avatar != null and !#strings.isEmpty(#authentication.principal.user.avatar)}"
+                                        class="fa fa-user-circle" style="font-size:32px;"></i>
                                     <i class="fa fa-caret-down" style="font-size:12px;"></i>
                                 </a>
-                                                                <ul class="dropdown-nav" style="margin-top: 15px;">
-                                    <li style="padding: 10px 20px; border-bottom: 1px solid #eee; text-align: left; background: #fafafa; cursor: default;">
-                                        <div style="font-size: 12px; color: #888; font-weight: normal; line-height: normal; margin-bottom: 2px;">Xin chào,</div>
-                                        <strong th:text="${#authentication.principal.user.fullName}" style="color: #333; font-size: 15px; display: block; line-height: normal;">User Name</strong>
+                                <ul class="dropdown-nav" style="margin-top:15px;">
+                                    <li style="padding:10px 20px;border-bottom:1px solid #eee;background:#fafafa;">
+                                        <div style="font-size:12px;color:#888;">Xin chào,</div>
+                                        <strong sec:authorize="isAuthenticated()"
+                                            th:text="${#authentication.principal.user.fullName}"
+                                            style="color:#333;font-size:15px;display:block;">User</strong>
                                     </li>
-                                    <li><a th:href="@{/order-tracking}" style="height: auto; line-height: normal;"><i class="fa fa-box me-1"></i> Đơn hàng</a></li>
+                                    <li><a th:href="@{/order-tracking}" style="height:auto;line-height:normal;">
+                                            <i class="fa fa-box"></i> Đơn hàng</a></li>
                                     <li>
                                         <form th:action="@{/logout}" method="post" style="margin:0;">
-                                            <button type="submit" class="logout-btn" style="height: auto; line-height: normal; outline:none; box-shadow:none; padding: 8px 20px; background: none; border: none; cursor: pointer; width: 100%; text-align: left; color: #333; font-size: 14px; font-weight: 500;">
-                                                <i class="fa fa-sign-out-alt me-1"></i> Đăng xuất
+                                            <button type="submit"
+                                                style="height:auto;padding:8px 20px;background:none;border:none;
+                                                       cursor:pointer;width:100%;text-align:left;color:#333;font-size:14px;">
+                                                <i class="fa fa-sign-out-alt"></i> Đăng xuất
                                             </button>
                                         </form>
                                     </li>
                                 </ul>
                             </li>
+
                             <li class="cart-item">
-                                <a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i> Cart (0)</a>
+                                <a th:href="@{/cart}"><i class="fa fa-shopping-cart"></i> Cart</a>
                             </li>
                         </ul>
                     </nav>
@@ -67,126 +407,163 @@
         </div>
     </header>
 
-    <section class="section" id="order-tracking">
+    <!-- MAIN -->
+    <section class="page-wrap">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h3 class="tracking-title" th:if="${successMsg}" th:text="${successMsg}" style="color: green;"></h3>
-					<h2 class="tracking-title" th:unless="${successMsg}">Track Your Order</h2>
-                </div>
+
+            <h1 class="page-title"><i class="fa fa-box" style="color:#ff5e00;"></i> My Orders</h1>
+            <p class="page-sub">View the status and details of all your orders</p>
+
+            <!-- Thông báo thành công -->
+            <div th:if="${successMsg}" class="msg-ok">
+                <i class="fa fa-check-circle"></i>
+                <span th:text="${successMsg}"></span>
             </div>
 
-            <div class="order-details-card">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="card-title">Order Details</h3>
-                    </div>
+            <!-- Thông báo lỗi -->
+            <div th:if="${errorMsg}" class="msg-err">
+                <i class="fa fa-exclamation-circle"></i>
+                <span th:text="${errorMsg}"></span>
+            </div>
+
+            <!-- Danh sách đơn hàng -->
+            <div th:if="${orders != null and !#lists.isEmpty(orders)}">
+
+                <div class="orders-bar">
+                    <h3>Order of: <span th:text="${searchEmail}" style="color:#ff5e00;"></span></h3>
+                    <span class="count-badge" th:text="${#lists.size(orders)} + ' đơn'"></span>
                 </div>
 
-                <div class="row content-grid" th:if="${order != null}">   
-                                
-                    <div class="col-lg-3 col-md-6 info-col">
-                        <p class="date" th:text="${#dates.format(order.createDate, 'MMMM dd, yyyy')}"></p>
-                        <p class="order-no" th:text="'Order No: ' + ${order.code}"></p>
-                        
-                        <div class="status-group">
-                            <p>Order Status: <span style="color: #ff5e00; font-weight: bold;" th:text="${order.orderStatus.name}">Pending</span></p>
-                            <p>Total Items: <span th:text="${order.saleOrderProducts.size()}">0</span></p>
+                <!-- Mỗi đơn hàng -->
+                <div th:each="order, iStat : ${orders}" class="o-card" th:id="'card-' + ${order.code}"
+                    th:classappend="${iStat.index == 0} ? ' open' : ''">
+
+                    <!-- Header click để mở/đóng -->
+                    <div class="o-head" th:data-code="${order.code}"
+                        onclick="toggleCard(this.getAttribute('data-code'))">
+
+                        <div class="o-head-left">
+                            <span class="o-code" th:text="'#' + ${order.code}"></span>
+                            <span class="o-date"
+                                th:text="${order.createDate != null ? #dates.format(order.createDate,'dd/MM/yyyy') : ''}">
+                            </span>
+                        </div>
+
+                        <div class="o-head-right">
+                            <span class="o-total"
+                                th:text="${#numbers.formatDecimal(order.total,0,'COMMA',0,'POINT')} + ' $'">
+                            </span>
+
+                            <!-- Badge trạng thái — dùng th:style thay vì th:classappend để tránh lỗi -->
+                            <span class="s-badge"
+                                th:style="${order.orderStatus.name == 'Pending'}    ? 'background:#fff3cd;color:#856404;' :
+                                        (order.orderStatus.name == 'Processing'  ? 'background:#cff4fc;color:#055160;' :
+                                        (order.orderStatus.name == 'Shipping'    ? 'background:#d1ecf1;color:#0c5460;' :
+                                        (order.orderStatus.name == 'Delivered'   ? 'background:#d4edda;color:#155724;' :
+                                        (order.orderStatus.name == 'Cancelled'   ? 'background:#f8d7da;color:#721c24;' : 'background:#e2e3e5;color:#495057;'))))"
+                                th:text="${order.orderStatus.name}">
+                            </span>
+
+                            <i class="fa fa-chevron-down chevron"></i>
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-md-6 info-col">
-                        <h5 class="sub-head">Ship to:</h5>
-                        <p class="address"><strong th:text="${order.customerName}">Name</strong></p>
-                        <p class="address" th:text="${order.customerAddress}">Address</p>
-                        <p class="address" th:text="'Tel: ' + ${order.customerMobile}">Phone</p>
+                    <!-- Body chi tiết -->
+                    <div class="o-body" th:id="'body-' + ${order.code}">
 
-                        <h5 class="sub-head mt-4">Payment Notes:</h5>
-                        <p class="payment-info" th:text="${order.description != null and order.description != '' ? order.description : 'No special notes'}"></p>
-                    </div>
+                        <!-- Thông tin giao hàng & tổng tiền -->
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <label>Giao đến</label>
+                                <p th:text="${order.customerName}"></p>
+                                <p th:text="${order.customerAddress}" style="font-size:13px;color:#9aa0b0;"></p>
+                                <p th:text="'Tel: ' + ${order.customerMobile}" style="font-size:13px;color:#9aa0b0;">
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <label>Tổng cộng</label>
+                                <p th:text="${#numbers.formatDecimal(order.total,0,'COMMA',0,'POINT')} + ' $'"
+                                    style="font-size:20px;font-weight:800;color:#ff5e00;"></p>
+                                <p style="font-size:13px;color:#9aa0b0;">Miễn phí vận chuyển</p>
+                            </div>
+                            <div class="info-box">
+                                <label>Số sản phẩm</label>
+                                <p th:text="${#sets.size(order.saleOrderProducts)} + ' sản phẩm'"></p>
+                            </div>
+                            <div class="info-box" th:if="${order.description != null and order.description != ''}">
+                                <label>Ghi chú</label>
+                                <p th:text="${order.description}"></p>
+                            </div>
+                        </div>
 
-                    <div class="col-lg-3 col-md-6 info-col">
-                        <h5 class="sub-head">Order Summary</h5>
-                        <ul class="summary-list">
-                            <li>Subtotal: <span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' $'"></span></li>
-                            <li>Shipping: <span>0 $</span></li>
-                            <li class="total">Total <span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' $'"></span></li>
-                        </ul>
-                    </div>
+                        <!-- Bảng sản phẩm -->
+                        <table class="prod-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Phân loại</th>
+                                    <th>SL</th>
+                                    <th>Đơn giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item, idx : ${order.saleOrderProducts}">
+                                    <td th:text="${idx.count}"></td>
+                                    <td style="font-weight:600;" th:text="${item.name}"></td>
+                                    <td style="color:#9aa0b0;font-size:13px;" th:text="${item.description}"></td>
+                                    <td th:text="${item.quantity}"></td>
+                                    <td th:text="${#numbers.formatDecimal(item.price,0,'COMMA',0,'POINT')} + ' $'"></td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    <div class="col-lg-3 col-md-6 action-col">
-                        <button type="button" class="btn-outline btn-cancel-order" 
-                                th:if="${order.orderStatus.name == 'Pending'}" 
-                                th:data-code="${order.code}">
-                            Modify / Cancel Order
-                        </button>
-                        
-                        <a th:href="@{/}" class="btn-solid" style="display: block; text-align: center; text-decoration: none; line-height: normal;">
-                            Discover More
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="row" th:unless="${order != null}">
-                    <div class="col-12 text-center" style="padding: 50px;">
-                        <h4>No new order information found..</h4>
-                        <a th:href="@{/}" class="btn btn-dark mt-3">Return to the Store</a>
-                    </div>
-                </div>
+                        <!-- Nút hành động -->
+                        <div class="o-actions">
+                            <!-- Chỉ hiện nút Hủy khi trạng thái là Pending -->
+                            <button type="button" class="btn-cancel" th:if="${order.orderStatus.name == 'Pending'}"
+                                th:data-code="${order.code}" onclick="cancelOrder(this)">
+                                <i class="fa fa-times-circle"></i> Hủy đơn hàng
+                            </button>
+                            <a th:href="@{/}" class="btn-shop">
+                                <i class="fa fa-shopping-bag"></i> Tiếp tục mua sắm
+                            </a>
+                        </div>
+
+                    </div><!-- /o-body -->
+                </div><!-- /th:each -->
             </div>
+
+            <!-- Không có đơn hàng nào -->
+            <div th:if="${orders != null and #lists.isEmpty(orders)}" class="empty-box">
+                <i class="fa fa-box-open"></i>
+                <h4>Chưa có đơn hàng nào</h4>
+                <p>Bạn chưa đặt đơn hàng nào. Hãy bắt đầu mua sắm!</p>
+                <a th:href="@{/}">Khám phá sản phẩm →</a>
+            </div>
+
+            <!-- Lần đầu vào trang (orders == null) -->
+            <div th:if="${orders == null}" class="empty-box">
+                <i class="fa fa-clipboard-list"></i>
+                <h4>Chưa có đơn hàng nào</h4>
+                <p>Tất cả đơn hàng của bạn sẽ hiển thị ở đây.</p>
+                <a th:href="@{/}">Khám phá sản phẩm →</a>
+            </div>
+
         </div>
     </section>
 
-    <section class="section" id="promo">
-        <div class="container">
-            <div class="row">
-                
-                <div class="col-lg-6">
-                    <div class="left-images">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="thumb">
-                                    <img th:src="@{/assets/images/men-04.png}" alt="">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="thumb">
-                                    <img th:src="@{/assets/images/men-06.png}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="right-content">
-                        <h2>Men's Collection</h2>
-                        <span>Explore Our Product</span>
-                        
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-                        
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-                        
-                        <div class="main-white-button">
-                            <a th:href="@{/men}">Discover More</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
+    <!-- FOOTER -->
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
                     <div class="first-item">
                         <div class="logo">
-                            <img th:src="@{/assets/images/logo-white.png}" alt="hexashop ecommerce templatemo">
+                            <img th:src="@{/assets/images/logo-white.png}" alt="HexaShop">
                         </div>
                         <ul>
-                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, United States</li>
+                            <li><b>Address:</b> 16501 Collins Ave, Sunny Isles Beach, FL 33160, US</li>
                             <li><b>E-mail:</b> hexashop@company.com</li>
                             <li><b>Phone:</b> 010-020-0340</li>
                         </ul>
@@ -195,8 +572,8 @@
                 <div class="col-lg-3">
                     <h4>Shopping &amp; Categories</h4>
                     <ul>
-                        <li><a th:href="@{/men}">Men’s Shopping</a></li>
-                        <li><a th:href="@{/women}">Women’s Shopping</a></li>
+                        <li><a th:href="@{/men}">Men's Shopping</a></li>
+                        <li><a th:href="@{/women}">Women's Shopping</a></li>
                         <li><a th:href="@{/kids}">Kid's Shopping</a></li>
                     </ul>
                 </div>
@@ -205,7 +582,6 @@
                     <ul>
                         <li><a th:href="@{/}">Homepage</a></li>
                         <li><a th:href="@{/about}">About Us</a></li>
-                        <li><a href="#">Help</a></li>
                         <li><a th:href="@{/contact}">Contact Us</a></li>
                     </ul>
                 </div>
@@ -214,8 +590,7 @@
                     <ul>
                         <li><a href="#">Help</a></li>
                         <li><a href="#">FAQ's</a></li>
-                        <li><a href="#">Shipping</a></li>
-                        <li><a href="#">Tracking ID</a></li>
+                        <li><a th:href="@{/order-tracking}">Đơn hàng của tôi</a></li>
                     </ul>
                 </div>
             </div>
@@ -224,7 +599,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved.</p>
+                        <p>Copyright &copy; 2024 HexaShop Co., Ltd. All Rights Reserved.</p>
                     </div>
                 </div>
             </div>
@@ -232,54 +607,58 @@
     </footer>
 
     <script>
-		document.addEventListener("DOMContentLoaded", function() {
-		    const btnCancel = document.querySelector('.btn-outline');
-		
-		    if (btnCancel && btnCancel.innerText.includes("Cancel")) {
-		        btnCancel.addEventListener('click', function(e) {
-		            e.preventDefault();
-		            
-		            // Lấy mã đơn hàng từ giao diện
-		            const orderNoText = document.querySelector('.order-no').innerText;
-		            const orderCode = orderNoText.replace('Order No: ', '').trim();
-		
-		            if (confirm("Are you sure you want to cancel order " + orderCode + "? This action cannot be undone.")) {
-		                
-		                // Hiệu ứng đang xử lý
-		                btnCancel.innerText = "Processing...";
-		                btnCancel.disabled = true;
-		
-		                fetch('/api/order/cancel/' + orderCode, {
-		                    method: 'POST',
-		                    headers: {
-		                        'Content-Type': 'application/json'
-		                    }
-		                })
-		                .then(response => response.json())
-		                .then(data => {
-		                    if (data.status === 'success') {
-		                        alert(data.message);
-		                        // Cập nhật lại trạng thái trên giao diện mà không cần F5
-		                        document.querySelector('.status-group span').innerText = "Cancelled";
-		                        document.querySelector('.status-group span').style.color = "red";
-		                        document.querySelector('.tracking-title').innerText = "Order has been cancelled successfully.";
-		                        document.querySelector('.tracking-title').style.color = "red";
-		                        btnCancel.style.display = "none"; // Ẩn nút hủy sau khi hủy xong
-		                    } else {
-		                        alert("Error: " + data.message);
-		                        btnCancel.innerText = "Modify / Cancel Order";
-		                        btnCancel.disabled = false;
-		                    }
-		                })
-		                .catch(error => {
-		                    console.error('Error:', error);
-		                    alert("Connection error!");
-		                    btnCancel.disabled = false;
-		                });
-		            }
-		        });
-		    }
-		});
-	</script>
+        /* Mở / đóng accordion đơn hàng */
+        function toggleCard(code) {
+            var card = document.getElementById('card-' + code);
+            if (card) card.classList.toggle('open');
+        }
+
+        /* Hủy đơn hàng qua AJAX */
+        function cancelOrder(btn) {
+            var code = btn.getAttribute('data-code');
+            if (!confirm('Bạn có chắc muốn hủy đơn hàng #' + code + '?\nHành động này không thể hoàn tác.')) return;
+
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.disabled = true;
+
+            fetch('/api/order/cancel/' + code, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.status === 'success') {
+                        /* Cập nhật badge trạng thái */
+                        var card = document.getElementById('card-' + code);
+                        var badge = card.querySelector('.s-badge');
+                        badge.textContent = 'Cancelled';
+                        badge.style.background = '#f8d7da';
+                        badge.style.color = '#721c24';
+                        btn.style.display = 'none';
+                        showToast('Đã hủy đơn hàng #' + code + ' thành công!', 'ok');
+                    } else {
+                        showToast(data.message, 'err');
+                        btn.innerHTML = '<i class="fa fa-times-circle"></i> Hủy đơn hàng';
+                        btn.disabled = false;
+                    }
+                })
+                .catch(function () {
+                    showToast('Lỗi kết nối, vui lòng thử lại!', 'err');
+                    btn.innerHTML = '<i class="fa fa-times-circle"></i> Hủy đơn hàng';
+                    btn.disabled = false;
+                });
+        }
+
+        /* Toast thông báo */
+        function showToast(msg, type) {
+            var t = document.createElement('div');
+            t.className = 'toast-fixed';
+            t.style.background = (type === 'ok') ? '#28a745' : '#dc3545';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(function () { t.remove(); }, 4000);
+        }
+    </script>
 </body>
+
 </html>
