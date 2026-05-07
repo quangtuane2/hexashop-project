@@ -99,12 +99,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" th:href="@{/admin/orders}">
                                 <i class="fa fa-shopping-bag"></i> Orders
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" th:href="@{/admin/customers}">
                                 <i class="fa fa-users"></i> Customers
                             </a>
                         </li>
@@ -114,9 +114,11 @@
                             </a>
                         </li>
                         <li class="nav-item mt-5">
-                            <a class="nav-link text-danger" href="index.html">
+                            <form th:action="@{/logout}" method="post" class="d-inline w-100 m-0 p-0">
+                            <button type="submit" class="nav-link text-danger d-block" style="background:none; border:none; text-align:left; width:100%; cursor:pointer;">
                                 <i class="fa fa-sign-out-alt"></i> Logout
-                            </a>
+                            </button>
+                        </form>
                         </li>
                     </ul>
                 </div>

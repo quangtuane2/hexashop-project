@@ -2182,3 +2182,51 @@ footer ul li a:hover {
     color: #d11218; 
     font-weight: bold;
 }
+
+/* User Dropdown Style (User side nav) */
+.user-dropdown .dropdown-nav {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    min-width: 150px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-top: 10px;
+    border-radius: 4px;
+    padding: 10px 0;
+}
+.user-dropdown:hover .dropdown-nav {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 0;
+}
+.user-dropdown .dropdown-nav li {
+    padding: 0;
+    display: block;
+}
+.user-dropdown .dropdown-nav li a,
+.user-dropdown .dropdown-nav li .logout-btn {
+    display: block;
+    padding: 8px 20px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    line-height: normal;
+    height: auto;
+    text-align: left;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.user-dropdown .dropdown-nav li a:hover,
+.user-dropdown .dropdown-nav li .logout-btn:hover {
+    color: red;
+    background: #f8f9fa;
+}

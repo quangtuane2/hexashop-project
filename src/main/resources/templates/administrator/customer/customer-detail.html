@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Khách hàng - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #2a2a2a;
+            color: #fff;
+            padding-top: 20px;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: #f55;
+            color: #fff;
+        }
+        .sidebar .nav-link i { margin-right: 10px; width: 20px; text-align: center; }
+        .main-content { padding: 20px; }
+
+        .info-box {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .avatar-xl {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #f55;
+        }
+        .avatar-placeholder-xl {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f55, #ff8c00);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            border: 3px solid #ffc0a0;
+        }
+
+        .role-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .info-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .info-value { font-size: 15px; font-weight: 500; color: #333; }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #555;
+            border-bottom: 2px solid #f55;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .order-row:hover { background-color: #fff8f8 !important; }
+
+        /* Avatar Upload Overlay */
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .avatar-wrapper:hover .avatar-overlay {
+            opacity: 1;
+        }
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            color: #fff;
+            font-size: 11px;
+            gap: 3px;
+        }
+        .avatar-overlay i { font-size: 18px; }
+        #avatarSpinner {
+            display: none;
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.75);
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+            <a th:href="@{/admin}" class="text-center mb-4 fs-4 fw-bold text-white d-block text-decoration-none">HEXA ADMIN</a>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin}"><i class="fa fa-home"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/category}"><i class="fa fa-list"></i> Categories</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/product}"><i class="fa fa-box"></i> Products</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/orders}"><i class="fa fa-shopping-bag"></i> Orders</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/admin/customers}"><i class="fa fa-users"></i> Customers</a></li>
+                <li class="nav-item mt-5">
+                    <form th:action="@{/logout}" method="post" class="d-inline w-100 m-0 p-0">
+                        <button type="submit" class="nav-link text-danger d-block" style="background:none; border:none; text-align:left; width:100%; cursor:pointer;">
+                            <i class="fa fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- MAIN -->
+        <main class="col-md-9 col-lg-10 main-content">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 pt-3">
+                <h1 class="h3 mb-0"><i class="fa fa-user me-2 text-danger"></i>Chi tiết Khách hàng</h1>
+                <a th:href="@{/admin/customers}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa fa-arrow-left me-1"></i>Quay lại danh sách
+                </a>
+            </div>
+
+            <!-- Flash messages -->
+            <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show">
+                <i class="fa fa-check-circle me-2"></i><span th:text="${successMsg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show">
+                <i class="fa fa-exclamation-circle me-2"></i><span th:text="${errorMsg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="row">
+                <!-- Cột trái: Profile Card + Edit Form -->
+                <div class="col-lg-4">
+
+                    <!-- Profile Card -->
+                    <div class="info-box text-center">
+                        <!-- Avatar with Upload Overlay -->
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="avatar-wrapper" onclick="document.getElementById('avatarFileInput').click()" title="Nhấn để thay đổi ảnh đại diện">
+                                <!-- Ảnh thật -->
+                                <img th:if="${customer.avatar != null and !#strings.isEmpty(customer.avatar)}"
+                                     id="customerAvatar"
+                                     th:src="${customer.avatar}" class="avatar-xl" alt="avatar">
+                                <!-- Placeholder chữ cái -->
+                                <div th:if="${customer.avatar == null or #strings.isEmpty(customer.avatar)}"
+                                     id="customerAvatar"
+                                     class="avatar-placeholder-xl mx-auto"
+                                     th:text="${#strings.isEmpty(customer.firstname) ? customer.username.substring(0,1).toUpperCase() : customer.firstname.substring(0,1).toUpperCase()}">A</div>
+
+                                <!-- Overlay hover -->
+                                <div class="avatar-overlay">
+                                    <i class="fa fa-camera"></i>
+                                    <span>Thay đổi</span>
+                                </div>
+
+                                <!-- Spinner khi đang upload -->
+                                <div id="avatarSpinner" style="display:none; position:absolute; inset:0; border-radius:50%; background:rgba(255,255,255,0.75); align-items:center; justify-content:center;">
+                                    <div class="spinner-border spinner-border-sm text-danger" role="status"></div>
+                                </div>
+                            </div>
+
+                            <!-- Hidden file input -->
+                            <input type="file" id="avatarFileInput"
+                                   accept="image/*" style="display:none"
+                                   th:attr="data-id=${customer.id}"
+                                   onchange="uploadAvatar(this)">
+                        </div>
+
+                        <h5 class="mb-1 fw-bold"
+                            th:text="${customer.firstname != null ? customer.firstname + ' ' + (customer.lastname != null ? customer.lastname : '') : customer.username}">
+                            Họ tên
+                        </h5>
+                        <p class="text-muted small mb-2" th:text="'@' + ${customer.username}">@username</p>
+
+                        <!-- Roles -->
+                        <div class="mb-3">
+                            <span th:each="role : ${customer.roles}"
+                                  class="role-badge badge me-1"
+                                  th:classappend="${role.name == 'ADMIN'} ? 'bg-danger' : 'bg-info text-dark'"
+                                  th:text="${role.name}">ROLE</span>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <span class="badge px-3 py-2 rounded-pill"
+                              th:classappend="${customer.status == true} ? 'bg-success' : 'bg-secondary'"
+                              th:text="${customer.status == true} ? 'Tài khoản hoạt động' : 'Tài khoản bị vô hiệu'">
+                            Active
+                        </span>
+
+                        <hr class="my-3">
+                        <div class="text-start">
+                            <div class="mb-2">
+                                <div class="info-label">Ngày đăng ký</div>
+                                <div class="info-value"
+                                     th:text="${customer.createDate != null ? #dates.format(customer.createDate, 'dd/MM/yyyy HH:mm') : '---'}">
+                                    01/01/2025
+                                </div>
+                            </div>
+                            <div>
+                                <div class="info-label">Cập nhật lần cuối</div>
+                                <div class="info-value"
+                                     th:text="${customer.updateDate != null ? #dates.format(customer.updateDate, 'dd/MM/yyyy HH:mm') : '---'}">
+                                    ---
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="info-box">
+                        <div class="section-title"><i class="fa fa-bolt me-2"></i>Hành động nhanh</div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-warning text-white"
+                                    th:attr="data-id=${customer.id}"
+                                    onclick="toggleStatusDetail(this)">
+                                <i class="fa fa-power-off me-2"></i>
+                                <span th:text="${customer.status == true} ? 'Vô hiệu hóa tài khoản' : 'Kích hoạt tài khoản'">Bật/Tắt</span>
+                            </button>
+                            <button class="btn btn-outline-danger"
+                                    th:attr="data-id=${customer.id}, data-name=${customer.username}"
+                                    onclick="deleteAndRedirect(this)">
+                                <i class="fa fa-trash me-2"></i>Xóa khách hàng này
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Cột phải: Edit Form -->
+                <div class="col-lg-8">
+                    <div class="info-box">
+                        <div class="section-title"><i class="fa fa-edit me-2"></i>Chỉnh sửa thông tin</div>
+                        <form th:action="@{/admin/customers/update}" method="post">
+                            <input type="hidden" name="id" th:value="${customer.id}">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Họ</label>
+                                    <input type="text" name="firstname" class="form-control"
+                                           th:value="${customer.firstname}" placeholder="Họ">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Tên</label>
+                                    <input type="text" name="lastname" class="form-control"
+                                           th:value="${customer.lastname}" placeholder="Tên">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Email</label>
+                                    <input type="email" name="email" class="form-control"
+                                           th:value="${customer.email}" placeholder="Email">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Số điện thoại</label>
+                                    <input type="text" name="mobile" class="form-control"
+                                           th:value="${customer.mobile}" placeholder="SĐT">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Địa chỉ</label>
+                                    <input type="text" name="address" class="form-control"
+                                           th:value="${customer.address}" placeholder="Địa chỉ">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Ghi chú</label>
+                                    <textarea name="description" class="form-control" rows="3"
+                                              th:text="${customer.description}" placeholder="Ghi chú về khách hàng..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        <i class="fa fa-save me-2"></i>Lưu thay đổi
+                                    </button>
+                                    <a th:href="@{/admin/customers/detail(id=${customer.id})}" class="btn btn-outline-secondary ms-2">
+                                        <i class="fa fa-undo me-1"></i>Hủy
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Đơn hàng của khách -->
+                    <div class="info-box">
+                        <div class="section-title"><i class="fa fa-shopping-bag me-2"></i>Đơn hàng gần đây</div>
+                        <div th:if="${orders == null or orders.empty}" class="text-muted text-center py-3">
+                            <i class="fa fa-inbox fa-2x mb-2 d-block"></i>
+                            Khách hàng chưa có đơn hàng nào.
+                        </div>
+                        <table th:if="${orders != null and !orders.empty}"
+                               class="table table-hover table-sm align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mã đơn</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="order-row" th:each="o : ${orders}">
+                                    <td class="fw-bold text-primary small" th:text="${o.code}">ORD-001</td>
+                                    <td class="small text-muted"
+                                        th:text="${o.createDate != null ? #dates.format(o.createDate, 'dd/MM/yyyy') : '---'}">
+                                        01/01/2025
+                                    </td>
+                                    <td class="fw-bold text-danger small"
+                                        th:text="${#numbers.formatDecimal(o.total, 0, 'COMMA', 0, 'POINT')} + ' $'">
+                                        100 $
+                                    </td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${o.orderStatus?.name == 'Delivered'} ? 'bg-success' :
+                                                              (${o.orderStatus?.name == 'Pending'} ? 'bg-warning text-dark' :
+                                                              (${o.orderStatus?.name == 'Shipping'} ? 'bg-info text-dark' : 'bg-danger'))"
+                                              th:text="${o.orderStatus?.name}">Status</span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/admin/orders/detail(id=${o.id})}"
+                                           class="btn btn-sm btn-outline-info" title="Xem đơn hàng">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleStatusDetail(btn) {
+        const id = btn.getAttribute('data-id');
+        fetch('/admin/customers/toggle-status/' + id, { method: 'POST' })
+            .then(r => r.text())
+            .then(() => location.reload())
+            .catch(() => alert('Lỗi khi cập nhật!'));
+    }
+
+    function deleteAndRedirect(btn) {
+        const name = btn.getAttribute('data-name');
+        if (!confirm('Bạn có chắc muốn xóa khách hàng "' + name + '"?\nHành động này không thể hoàn tác!')) return;
+        const id = btn.getAttribute('data-id');
+        fetch('/admin/customers/delete/' + id, { method: 'DELETE' })
+            .then(r => r.text())
+            .then(() => { window.location.href = '/admin/customers'; })
+            .catch(() => alert('Lỗi khi xóa!'));
+    }
+
+    function uploadAvatar(input) {
+        const id = input.getAttribute('data-id');
+        const file = input.files[0];
+        if (!file) return;
+
+        // Kiểm tra định dạng file phía client
+        if (!file.type.startsWith('image/')) {
+            showAvatarToast('Chỉ được chọn file ảnh!', 'danger');
+            return;
+        }
+
+        // Hiện spinner
+        const spinner = document.getElementById('avatarSpinner');
+        spinner.style.display = 'flex';
+
+        const formData = new FormData();
+        formData.append('avatarFile', file);
+
+        fetch('/admin/customers/update-avatar/' + id, {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => {
+            if (!r.ok) return r.text().then(t => Promise.reject(t));
+            return r.text();
+        })
+        .then(newPath => {
+            // Cập nhật avatar hiển thị ngay
+            const wrapper = document.querySelector('.avatar-wrapper');
+            const existing = document.getElementById('customerAvatar');
+
+            if (existing.tagName === 'IMG') {
+                // Đã có thẻ img, chỉ đổi src
+                existing.src = newPath;
+            } else {
+                // Đang là div placeholder, thay bằng img thật
+                const img = document.createElement('img');
+                img.id = 'customerAvatar';
+                img.src = newPath;
+                img.className = 'avatar-xl';
+                img.alt = 'avatar';
+                wrapper.insertBefore(img, existing);
+                existing.remove();
+            }
+
+            showAvatarToast('Ảnh đại diện đã được cập nhật!', 'success');
+        })
+        .catch(err => {
+            showAvatarToast(err || 'Lỗi khi upload ảnh!', 'danger');
+        })
+        .finally(() => {
+            spinner.style.display = 'none';
+            input.value = ''; // reset input để cho chọn lại cùng file
+        });
+    }
+
+    function showAvatarToast(msg, type) {
+        // Tạo toast nhỏ phía trên phải
+        const id = 'toast-' + Date.now();
+        const html = `
+            <div id="${id}" class="toast align-items-center text-white bg-${type} border-0 show"
+                 role="alert" style="position:fixed; top:20px; right:20px; z-index:9999; min-width:280px;">
+                <div class="d-flex">
+                    <div class="toast-body fw-semibold">${msg}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            onclick="document.getElementById('${id}').remove()"></button>
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', html);
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }, 3500);
+    }
+</script>
+</body>
+</html>

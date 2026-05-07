@@ -74,4 +74,12 @@ public class User extends BaseModel {
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    @Transient
+    public String getFullName() {
+        String f = (firstname != null) ? firstname.trim() : "";
+        String l = (lastname != null) ? lastname.trim() : "";
+        String full = f + " " + l;
+        return full.trim().isEmpty() ? username : full.trim();
+    }
 }

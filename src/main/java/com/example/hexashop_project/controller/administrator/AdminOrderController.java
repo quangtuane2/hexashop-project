@@ -22,26 +22,26 @@ public class AdminOrderController {
 
     @Autowired
     private SaleOrderRepository saleOrderRepository;
-    
+
     @Autowired
     private OrderService orderService;
 
-    @GetMapping({"/", ""})
+    @GetMapping({ "/", "" })
     public String listOrders(Model model) {
         // Lấy toàn bộ đơn hàng, sắp xếp mới nhất lên đầu
         List<SaleOrder> orders = saleOrderRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
-        
+
         model.addAttribute("orders", orders);
-        
-        // Trả về file HTML nằm ở thư mục templates/admin/order-list.html
+
         return "administrator/orders/order-list";
     }
-    
+
     // Trang xem chi tiết đơn hàng
     @GetMapping("/detail")
     public String viewOrderDetail(@RequestParam Integer id, Model model) {
         SaleOrder order = saleOrderRepository.findById(id).orElse(null);
-        if (order == null) return "redirect:/admin/orders/order-list";
+        if (order == null)
+            return "redirect:/admin/orders/order-list";
 
         model.addAttribute("order", order);
         return "administrator/orders/order-detail";

@@ -46,6 +46,9 @@ public class HomeController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private com.example.hexashop_project.repository.SaleOrderRepository saleOrderRepository;
+
     // Ánh xạ URL trang chủ (http://localhost:9090/ hoặc
     // http://localhost:9090/index)
     @GetMapping({ "/", "/index" })
@@ -273,7 +276,14 @@ public class HomeController {
     }
 
     @GetMapping("/order-tracking")
-    public String orderTracking() {
+    public String orderTracking(Model model, java.security.Principal principal) {
+        if (principal != null) {
+            String email = principal.getName();
+            List<SaleOrder> orders = saleOrderRepository.findByCustomerEmailOrderByCreateDateDesc(email);
+            if (orders != null && !orders.isEmpty()) {
+                model.addAttribute("order", orders.get(0));
+            }
+        }
         return "customer/order-tracking";
     }
     
